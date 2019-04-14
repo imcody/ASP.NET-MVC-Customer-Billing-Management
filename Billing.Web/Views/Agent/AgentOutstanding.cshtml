@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoiceListViewModel>
+
+@{
+    ViewBag.Title = "Agent Outstanding Invoice List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div id="pnlOutstandingInvoiceFileter" class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Agent</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("AgentId", (SelectList)ViewBag.AgentList, "Select Agent", new { @class = "form-control", id = "AllAgentId" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="GetOutstandingInvoices" id="GetOutstandingInvoices" class="btn btn-primary btn-sm" value="Get Outstanding Invoices" onclick="return SearchAgentOutstanding()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pnlOutstandingInvoiceList" class="panel-body">
+                @{Html.RenderPartial("Agent/OutstandingInvoiceList", Model);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function SearchAgentOutstanding() {
+        var AgentId = parseInt($('#AllAgentId').val());
+        if (AgentId > 0) {
+            $.get('/Agent/GetAgentOutstanding', { AgentId: AgentId }, function (res) {
+                $('div#pnlOutstandingInvoiceList').html(res);
+            });
+        }
+        else {
+            alert('Please select an agent first');
+            return false;
+        }
+    }
+</script>

@@ -1,0 +1,179 @@
+﻿<div class="filter-section" id="InvoiceInfo">
+    <div class="filter-head">
+        <a href="javascript:;" class="sidebar-collapse">
+            Information
+        </a>
+    </div>
+    <div class="filter-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">INVOICE DATE</label>
+                        <div class="col-md-8">
+                            @Model.SysCreateDate.ToString("dd-MM-yyyy")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">INVOICE NO</label>
+                        <div class="col-md-8">
+                            @Model.InvoiceId.ToString().PadLeft(6, '0')
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">
+                            @{
+                                if (Model.InvType == 1)
+                                {
+                                    @("Agent.");
+                                }
+                                else if (Model.InvType == 2)
+                                {
+                                    @("Customer.");
+                                }
+                            }
+                        </label>
+                        <div class="col-md-8">
+                            @Model.AgentName
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">PNR</label>
+                        <div class="col-md-8">
+                            @Model.Pnr
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">GDS BOOKING DATE</label>
+                        <div class="col-md-8">
+                            @Model.GdsBookingDate
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">AIRLINES</label>
+                        <div class="col-md-8">
+                            @Model.AirlinesName
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">VENDOR</label>
+                        <div class="col-md-8">
+                            @Model.VendorName
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">VENDOR INVOICE</label>
+                        <div class="col-md-8">
+                            @Model.VendorInvNo
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">EDP</label>
+                        <div class="col-md-8">
+                            @Model.ExpectedPaymentDate.ToString("dd-MM-yyyy")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">GDS</label>
+                        <div class="col-md-8">
+                            @Model.GDSs
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">ADDRESS</label>
+                        <div class="col-md-8">
+                            @Model.AgentAddress
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">POST CODE</label>
+                        <div class="col-md-8">
+                            @Model.AgentPostCode
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tel</label>
+                        <div class="col-md-8">
+                            @Model.AgentTelephone
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Mobile No</label>
+                        <div class="col-md-8">
+                            @Model.AgentMobile
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Fax No</label>
+                        <div class="col-md-8">
+                            @Model.AgentFax
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Email Address</label>
+                        <div class="col-md-8">
+                            @Model.AgentEmail
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Cancellation</label>
+                        <div class="col-md-8">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Model.CancellationChargeBefore
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Model.CancellationChargeAfter
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Date Change</label>
+                        <div class="col-md-8">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    @Model.CancellationDateBefore
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    @Model.CancellationDateAfter
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">No show</label>
+                        <div class="col-md-8">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    @Model.NoShowBefore
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    @Model.NoShowAfter
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Raised By</label>
+                        <div class="col-md-8">
+                            @Model.PersonName
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+

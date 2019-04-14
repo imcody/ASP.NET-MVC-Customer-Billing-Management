@@ -1,0 +1,84 @@
+RP/LONRV31SK/LONRV31SK            MM/SU  14MAR18/1330Z   TZUUWX                 
+LONRV31SK/2509MM/14MAR18                                                        
+  1.BEGUM/AFROZA MRS   2.BEGUM/SADIA MRS                                        
+  3.CHOWDHURY/NOWREEN MISS(B13/17JAN04)                                         
+  4.CHOWDHURY/REZWAN MSTR(C02/17SEP16)                                          
+  5.CHOWDHURY/SAFIA MISS(CHD/12SEP08)   6.JANNAT/NADIA MRS                      
+  7.MIAH/RABEYA MRS(INFYASMIN/RIDIMISS/17MAR17)                                 
+  8.MIAH/SADEK ALI MR   9.MIAH/SALEHIN MR                                       
+ 10  EK 002 K 20DEC 4*LHRDXB HK9  1340 0040  21DEC  E  EK/LHRMDS                
+ 11  EK 582 K 21DEC 5*DXBDAC HK9  0145 0800  21DEC  E  EK/LHRMDS                
+ 12  EK 583 K 10JAN 4*DACDXB HK9  0955 1320  10JAN  E  EK/LHRMDS                
+ 13  EK 003 K 10JAN 4*DXBLHR HK9  1430 1820  10JAN  E  EK/LHRMDS
+ 14  EK 583 K 10JAN 4*DACDXB HK9  0955 1320  10JAN  E  EK/LHRMDS                
+ 15  EK 003 K 10JAN 4*DXBLHR HK9  1430 1820  10JAN  E  EK/LHRMDS 
+
+RP/LONU122MN/LONU122MN            PI/SU   1MAR18/1148Z   OEGSGH                 
+LONU122MN/2060AI/23FEB18                                                        
+  1.ALOM/MOHAMMAD JAHID MSTR(CHD/06OCT06)                                       
+  2.ALOM/MOHAMMAD JAWAD MR(C15/03JUL03)                                         
+  3.FATTAH/MOHAMMED ABDUL MR                                                    
+  4.JAMILA/SUMAIYA JAHAN MISS(CHD/19MAR11)                                      
+  5.JUMA/SAMIYA JAHAN MISS   6.KHATUN/AFTERA MRS                                
+  7.KHATUN/JAYADA MRS                                                           
+  8  RJ 112 Q 26DEC 3*LHRAMM HK7  1605 2305  26DEC  E  RJ/OEGSGH                
+  9  RJ 704 Q 27DEC 4*AMMJED HK7  0225 0530  27DEC  E  RJ/OEGSGH                
+ 10  ARNK                                                                       
+ 11  RJ 729 Q 03JAN 4*MEDAMM HK7  0915 0955  03JAN  E  RJ/OEGSGH                
+ 12  RJ 111 Q 03JAN 4*AMMLHR HK7  1120 1445  03JAN  E  RJ/OEGSGH
+
+
+Amadeus
+#################################################################
+RP/LONU122MN/LONU122MN            SI/SU   8MAR18/1306Z   NAU5PB
+LONU122MN/0710AM/23FEB18                 
+  1.MUSAMMAT/KAMRUN NAHAR MRS   2.NIAZ/ADIYAT MR(C13/09MAY06)
+  3  EK 034 K 29JUL 7*STNDXB HK2  2110 0710  30JUL  E  EK/B6FUN2
+  4  EK 586 K 30JUL 1*DXBDAC HK2  1030 1720  30JUL  E  EK/B6FUN2
+  5  EK 583 U 28AUG 2*DACDXB HK2  1015 1305  28AUG  E  EK/B6FUN2
+  6  EK 003 U 28AUG 2*DXBLHR HK2  1415 1840  28AUG  E  EK/B6FUN2
+#################################################################
+
+               
+#################################################################
+RP/LONU122NO/LONU122NO            AR/SU   9MAR18/1349Z   V6GG4X
+LONU122NO/2345MN/9MAR18                                                         
+  1.HUSNA/MAAJBAHUL MRS	2.TAREK/SHOWKOT IBNE
+  2  BG 202 V 09MAR 5*LHRDAC HK1  1800 1140  10MAR  E  BG/AYVD4                 
+  3  BG 001 N 25MAR 7*DACLHR HK1  0935 1555  25MAR  E  BG/AYVD4
+################################################################# 
+
+#################################################################
+RP/LONU122MN/LONU122MN            SI/SU   8MAR18/1306Z   NZL5PB                 
+LONU122MN/0710AM/23FEB18                                                        
+  1.MUSAMMAT/KAMRUN NAHAR MRS	2.NIAZ/ADIYAT MR(C13/09MAY06)                   
+  3  EK 034 K 29JUL 7*STNDXB HK2  2110 0710  30JUL  E  EK/B6FUN2                
+  4  EK 586 K 30JUL 1*DXBDAC HK2  1030 1720  30JUL  E  EK/B6FUN2                
+  5  EK 583 U 28AUG 2*DACDXB HK2  1015 1305  28AUG  E  EK/B6FUN2                
+  6  EK 003 U 28AUG 2*DXBLHR HK2  1415 1840  28AUG  E  EK/B6FUN2
+  7  EK 583 U 28AUG 2*DACDXB HK2  1015 1305  28AUG  E  EK/B6FUN2                
+  8  EK 003 U 28AUG 2*DXBLHR HK2  1415 1840  28AUG  E  EK/B6FUN2
+#################################################################
+
+#################################################################
+RP/LONU122MN/LONU122MN            AA/RC   5JUL18/1338Z   KMKT2K                 
+LONU122MN/2509MM/5JUL18                                                         
+ 1.KHAN/JABIR ZAKWAN MSTR(CHD/11NOV14)                                         
+ 2.KHAN/MD MONIRUZZAMAN MR                                                     
+ 3.KHAN/SAHIR SAFWAN MSTR(CHD/18MAR11)                                         
+ 4.MOUSHUMI/SABRINA MRS(INFKHAN/RUFAIDA ARWA MISS/08MAR18)                     
+ 5  QR 004 Q 01AUG 3*LHRDOH HK4  1505 2359  01AUG  E  QR/KMKT2K                
+ 6  QR 636 Q 02AUG 4*DOHDAC HK4  0125 0945  02AUG  E  QR/KMKT2K                
+ 7  QR 635 N 06SEP 4*DACDOH HK4  1940 2210  06SEP  E  QR/KMKT2K                
+ 8  QR 329 N 07SEP 5*DOHLGW HK4  0225 0725  07SEP  E  QR/KMKT2K 
+ #################################################################
+ 
+ #################################################################
+RP/LONU122MN/LONU122MN            EK/RM   5JUL18/1554Z   KVOAWG                 
+LONU122MN/2607MH/5JUL18                                                         
+ 1.DEY/RAJIB MR   2.DEY/TUMPA MRS(INFDEY/AYUSHI MISS/11AUG17)                  
+ 3  EK 004 B 08JUL 7*LHRDXB HK2  2040 0635  09JUL  E  EK/PVGNI6                
+ 4  EK 586 B 09JUL 1*DXBDAC HK2  1030 1720  09JUL  E  EK/PVGNI6                
+ 5  EK 583 T 30JUL 1*DACDXB HK2  1015 1305  30JUL  E  EK/PVGNI6                
+ 6  EK 005 T 30JUL 1*DXBLHR HK2  1545 2015  30JUL  E  EK/PVGNI6
+ #################################################################

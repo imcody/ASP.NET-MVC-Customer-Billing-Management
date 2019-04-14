@@ -1,0 +1,187 @@
+﻿@model Billing.ViewModel.HomeViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+<div class="row">
+    <div id="pnlAgentQuckContact" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @{Html.RenderPartial("Home/AgentQuickContact");}
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlDraftList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Draft List
+                </div>
+            </div>
+            <div class="panel-body" id="pnlHomeDraftSearch">
+                @{Html.RenderPartial("Home/HomeDraftSearch");}
+            </div>
+            <div class="panel-body" id="DraftList" name="DraftList">
+                @{Html.RenderPartial("Invoice/DraftList", Model.DraftList);}
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlInvoiceList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Invoice List
+                </div>
+            </div>
+            <div class="panel-body" id="pnlHomeInvoiceSearch">
+                @{Html.RenderPartial("Home/HomeInvoiceSearch");}
+            </div>
+            <div class="panel-body" id="InvoiceList" name="InvoiceList">
+                @{Html.RenderPartial("Invoice/InvoiceList", Model.InvoiceList);}
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlFloatChequeList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Floating Cheques
+                </div>
+            </div>
+            <div id="FloatChequeList" name="FloatChequeList" class="panel-body">
+                @{Html.RenderPartial("Home/FloatChequeList", Model.FloatingCheques);}
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlFloatChequeList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Bulk Payment Cheques
+                </div>
+            </div>
+            <div id="FloatChequeList" name="FloatChequeList" class="panel-body">
+                @{Html.RenderPartial("Home/BulkFloatChequeList", Model.BulkFloatingCheques);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.InvoiceSearch').click(function () {
+        var InvoiceId = parseInt($("#InvoiceId").val());
+        var ToDate = $("#ToDate").val();
+        var FromDate = $("#FromDate").val();
+        var SearchBy = $("#SearchBy").val();
+        var SearchValue = $("#SearchValue").val();
+        $.ajax({
+            url: '@Url.Action("Search", "Home")',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ invoiceID: InvoiceId, ToDate: ToDate, FromDate: FromDate, SearchBy: SearchBy, SearchValue: SearchValue }),
+            beforeSend: function () {
+                $('body').find('.loader-container').show();
+            },
+            success: function (result) {
+                $('body').find('.loader-container').hide();
+                $("div#InvoiceList").html(result);
+                $("#InvoiceId").val() = "";
+                $("#ToDate").val() = "";
+                $("#FromDate").val() = "";
+                $("#SearchBy").val() = "";
+                $("#SearchValue").val() = "";
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("div#InvoiceList").html(err.Message);
+                $("#InvoiceId").val() = "";
+                $("#ToDate").val() = "";
+                $("#FromDate").val() = "";
+                $("#SearchBy").val() = "";
+                $("#SearchValue").val() = "";
+            },
+        });
+    });
+    $('.HomeInvoiceSearch').click(function () {
+        var UserId = $("#HomeUserList").val();
+        var ToDate = $("#HomeToDate").val();
+        var FromDate = $("#HomeFromDate").val();
+        $.ajax({
+            url: '@Url.Action("SearchForHome", "Home")',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ FromDate: FromDate, ToDate: ToDate, UserId: UserId }),
+            beforeSend: function () {
+                $('body').find('.loader-container').show();
+            },
+            success: function (result) {
+                $('body').find('.loader-container').hide();
+                $("div#InvoiceList").html(result);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("div#InvoiceList").html(err.Message);
+            },
+        });
+    });
+    $('.HomeDraftSearch').click(function () {
+        var UserId = $("#DraftUserList").val();
+        var ToDate = $("#DraftToDate").val();
+        var FromDate = $("#DraftFromDate").val();
+        $.ajax({
+            url: '@Url.Action("DraftSearchForHome", "Home")',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ FromDate: FromDate, ToDate: ToDate, UserId: UserId }),
+            beforeSend: function () {
+                $('body').find('.loader-container').show();
+            },
+            success: function (result) {
+                $('body').find('.loader-container').hide();
+                $("div#DraftList").html(result);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("div#DraftList").html(err.Message);
+            },
+        });
+    });
+    $("input#InvoiceId").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            var InvoiceId = parseInt($("#InvoiceId").val());
+            var ToDate = '';
+            var FromDate = '';
+            var SearchBy = '';
+            var SearchValue = '';
+            $.ajax({
+                url: '@Url.Action("Search", "Home")',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({ invoiceID: InvoiceId, ToDate: ToDate, FromDate: FromDate, SearchBy: SearchBy, SearchValue: SearchValue }),
+                beforeSend: function () {
+                    $('body').find('.loader-container').show();
+                },
+                success: function (result) {
+                    $('body').find('.loader-container').hide();
+                    $("div#InvoiceList").html(result);
+                    $("#InvoiceId").val() = "";
+                    $("#ToDate").val() = "";
+                    $("#FromDate").val() = "";
+                    $("#SearchBy").val() = "";
+                    $("#SearchValue").val() = "";
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("div#InvoiceList").html(err.Message);
+                },
+            });
+        }
+    });
+</script>

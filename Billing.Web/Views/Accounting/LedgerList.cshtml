@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Billing.ViewModel.GeneralLedgerListViewModel>
+
+@{
+    ViewBag.Title = ViewBag.Type + " List";
+}
+<div class="row">
+    <div id="pnlLedgerFilters" class="col-md-12">
+        @{Html.RenderPartial("Accounting/LedgerListFilter");}
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlLedgerList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Type List
+                </div>
+            </div>
+            <div id="tblLedgerList" class="panel-body">
+                @{Html.RenderPartial("Accounting/LedgerListPartial", Model);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function FilterLedgerList() {
+        var FromDate = $('#FromDate').val();
+        var ToDate = $('#ToDate').val();
+        var LedgerHead = parseInt($('#LedgerHeadFilter').val());
+        var PaymentMethod = parseInt($('#PaymentMethod').val());
+        var StatementType = parseInt($('#StatementType').val());
+        $.ajax({
+            url: '@Url.Action("FilterLedgerList", "Accounting")',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ FromDate: FromDate, ToDate: ToDate, LedgerHead: LedgerHead, PaymentMethod: PaymentMethod, StatementType: StatementType }),
+            beforeSend: function () {
+                $('body').find('.loader-container').show();
+            },
+            success: function (result) {
+                $('body').find('.loader-container').hide();
+                $("div#pnlLedgerFilters").html(result);
+            },
+            error: function (xhr, status, error) {
+                $('body').find('.loader-container').hide();
+                var err = eval("(" + xhr.responseText + ")");
+                $("div#pnlLedgerFilters").html(err.Message);
+            },
+        });
+    }
+</script>

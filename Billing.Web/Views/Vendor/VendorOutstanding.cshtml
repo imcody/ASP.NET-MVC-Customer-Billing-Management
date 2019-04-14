@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoiceListViewModel>
+
+@{
+    ViewBag.Title = "Vendor Outstanding Invoice List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div id="pnlOutstandingInvoiceFileter" class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "AllVendorId" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="GetOutstandingInvoicesVendor" id="GetOutstandingInvoicesVendor" class="btn btn-primary btn-sm" value="Get Outstanding Invoices" onclick="return SearchVendorOutstanding()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pnlOutstandingInvoiceList" class="panel-body">
+                @{Html.RenderPartial("Vendor/OutstandingInvoiceList", Model);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function SearchVendorOutstanding() {
+        var VendorId = parseInt($('#AllVendorId').val());
+        if (VendorId > 0) {
+            $.get('/Vendor/GetVendorOutstanding', { VendorId: VendorId }, function (res) {
+                $('div#pnlOutstandingInvoiceList').html(res);
+            });
+        }
+        else {
+            alert('Please select an agent first');
+            return false;
+        }
+    }
+</script>

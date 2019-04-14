@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoiceListViewModel>
+
+@{
+    ViewBag.Title = "Invoice List";
+}
+<div class="row">
+    <div id="pnlFilterInvoice" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @{Html.RenderPartial("Invoice/InvoiceSearch", Model);}
+            </div>
+        </div>
+    </div>
+    <div id="pnlInvoiceList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Invoice List
+                </div>
+            </div>
+            <div class="panel-body" id="InvoiceList" name="InvoiceList">
+                @{Html.RenderPartial("Invoice/InvoiceList", Model);}
+            </div>
+        </div>
+    </div>    
+</div>
+<script type="text/javascript">
+    $('.InvoiceSearch').click(function () {
+        var InvoiceId = parseInt($("#InvoiceId").val());
+        var ToDate = $("#ToDate").val();
+        var FromDate = $("#FromDate").val();
+        var SearchBy = $("#SearchBy").val();
+        var SearchValue = $("#SearchValue").val();
+        $.ajax({
+            url: '@Url.Action("FilterInvoiceList", "Invoice")',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ invoiceID: InvoiceId, ToDate: ToDate, FromDate: FromDate, SearchBy: SearchBy, SearchValue: SearchValue }),
+            beforeSend: function () {
+                $('body').find('.loader-container').show();
+            },
+            success: function (result) {
+                $('body').find('.loader-container').hide();
+                $("div#InvoiceList").html(result);
+                $("#InvoiceId").val() = "";
+                $("#ToDate").val() = "";
+                $("#FromDate").val() = "";
+                $("#SearchBy").val() = "";
+                $("#SearchValue").val() = "";
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                $("div#InvoiceList").html(err.Message);
+                $("#InvoiceId").val() = "";
+                $("#ToDate").val() = "";
+                $("#FromDate").val() = "";
+                $("#SearchBy").val() = "";
+                $("#SearchValue").val() = "";
+            },
+        });
+    });
+    $("input#InvoiceId").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            var InvoiceId = parseInt($("#InvoiceId").val());
+            var ToDate = '';
+            var FromDate = '';
+            var SearchBy = '';
+            var SearchValue = '';
+            $.ajax({
+                url: '@Url.Action("FilterInvoiceList", "Invoice")',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({ invoiceID: InvoiceId, ToDate: ToDate, FromDate: FromDate, SearchBy: SearchBy, SearchValue: SearchValue }),
+                beforeSend: function () {
+                    $('body').find('.loader-container').show();
+                },
+                success: function (result) {
+                    $('body').find('.loader-container').hide();
+                    $("div#InvoiceList").html(result);
+                    $("#InvoiceId").val() = "";
+                    $("#ToDate").val() = "";
+                    $("#FromDate").val() = "";
+                    $("#SearchBy").val() = "";
+                    $("#SearchValue").val() = "";
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    $("div#InvoiceList").html(err.Message);
+                },
+            });
+        }
+    });
+</script>

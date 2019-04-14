@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Billing.ViewModel.FloatChequeViewModel>
+<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 5%;">SL.</th>
+            <th style="text-align: center; width: 10%;">Date</th>
+            <th style="text-align: left; width: 12%;">Bank</th>
+            <th style="text-align: center; width: 12%;">Cheque No.</th>
+            <th style="text-align: center; width: 9%;">Account No.</th>
+            <th style="text-align: center; width: 8%;">Sort Code</th>
+            <th style="text-align: left; width: 19%;">Remarks</th>
+            <th style="text-align: right; width: 20%;">Amount </th>
+            <th style="text-align: center; width: 5%;">Realize </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int k = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;">@k</td>
+                    <td style="text-align: center;">@item.IssueDate</td>
+                    <td style="text-align: left;">@Billing.DAL.Helpers.BankHelper.getBankName(item.BankName.ToString())</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.CheuqueNo)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.AccountNo)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.SortCode)</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.Remarks)</td>
+                    <td style="text-align: right;">@item.Amount.ToString("f2")</td>
+                    <td style="text-align: center;">
+                        @Html.ActionLink("Realize", "ChequeRealize", "Accounting", new { inv = item.InvoiceId, name = item.BankName.ToString(), cheid = item.Id }, new { @class = "btn btn-success btn-xs" })
+                    </td>
+                </tr>
+                k++;
+            }
+        }
+    </tbody>
+</table>
+

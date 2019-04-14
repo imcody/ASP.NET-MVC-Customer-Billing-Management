@@ -1,0 +1,94 @@
+﻿<div class="filter-section" id="PassengerList">
+    <div class="filter-head">
+        <a href="javascript:;" class="sidebar-collapse">
+            Passenger List
+        </a>
+    </div>
+    <div class="filter-body">
+        @*<div class="col-md-12">
+            
+        </div>*@
+        <table class="table table-bordered table-sm">
+            <tr>
+                <th style="text-align: center;">SL.</th>
+                <th style="text-align: center;">Pax Type</th>
+                <th style="text-align: left;">NAME</th>
+                <th style="text-align: center;">Ticket No</th>
+                <th>Fare</th>
+                <th>Tax </th>
+                <th>Amount</th>
+                <th style="text-align: center;">Action</th>
+            </tr>
+            @{
+                int k = 1; double total = 0;
+                foreach (Billing.ViewModel.InvoiceDetailsPaxViewModel pax in Model.PaxList)
+                {
+
+                    total = Convert.ToDouble(total + pax.Amount);
+                    <tr>
+                        <td style="text-align: center;">
+                            @k
+                        </td>
+                        <td style="text-align: center;">
+                            @pax.PaxType
+                        </td>
+                        <td style="text-align: left;">
+                            @pax.Name
+                        </td>
+                        <td style="text-align: center;">
+                            @pax.TicketNo
+                        </td>
+                        <td style="text-align: right;">
+                            @pax.Fare.ToString("f2")
+                        </td>
+                        <td style="text-align: right;">
+                            @pax.Tax.ToString("f2")
+                        </td>
+                        <td style="text-align: right;">
+                            @pax.Amount.ToString("f2")
+                        </td>
+                        <td style="text-align: center;" title="Delete Ticket from Invoice">
+                            <a href="@Html.Raw(@Url.Action("DeleteTicket", "Invoice", new { @InvoiceId = pax.InvoiceId, @TicketId = pax.TableId}))">
+                                <i class="fa fa-remove"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    k++;
+                }
+                Model.Total = total;
+            }
+
+
+            <tr class="right-span">
+                <td colspan="6">Total:&nbsp;</td>
+                <td>
+                    @Model.Total.ToString("f2")
+                </td>
+                <td></td>
+            </tr>
+            <tr class="right-span">
+                <td colspan="6">Grand Total:&nbsp;</td>
+                <td>
+                    @((Model.Total + Model.ExtraCharge).ToString("f2"))
+                </td>
+                <td></td>
+            </tr>
+            <tr class="right-span">
+                <td colspan="6">Amount Received:&nbsp;</td>
+                <td>
+                    @Model.AmountReceived.ToString("f2")
+                </td>
+                <td></td>
+            </tr>
+            <tr class="right-span">
+                <td colspan="6">Amount Due:&nbsp;</td>
+                <td>
+                    @(((Model.Total + Model.ExtraCharge) - Model.AmountReceived).ToString("f2"))
+                </td>
+                <td></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+

@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "Cheque Realize";
+}
+@using (Html.BeginForm("ChequeRealize", "Vendor", null, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "VendorBulkPayment" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Vendor Bulk Payment
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @Html.Hidden("Amount", (object)ViewBag.Amount)
+                    @Html.Hidden("Notes", (object)ViewBag.Notes)
+                    @Html.Hidden("LedgerDate", (object)ViewBag.LedgerDate)
+                    @Html.Hidden("ChekId", (object)ViewBag.ChekId)
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Vendor</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "AllVendorId", onchange = "return GetVendorOutstandingInvoices(this.value);", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Other Invoice</label>
+                        <div class="col-md-10">
+                            @*<input type="checkbox" name="OtherInvoice" id="OtherInvoice" class="input-sm pull-left" />*@
+                            @Html.CheckBox("OtherInvoice")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Deposit To</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("BankId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Deposit To", new { @class = "form-control BankId", onchange = "return getBankAccountsBP(this.value);" })
+                        </div>
+                    </div>
+                    <div class="BankAccountListBP">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">A/C No</label>
+                        <div class="col-md-10">
+                            @ViewBag.AccountNo
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Amount</label>
+                        <div class="col-md-10">
+                            @ViewBag.Amount.ToString("f2")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Date</label>
+                        <div class="col-md-10">
+                            @ViewBag.LedgerDate
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Notes</label>
+                        <div class="col-md-10">
+                            @ViewBag.Notes
+                        </div>
+                    </div>
+                    <div id="VendorOutstandingInvoiceList">
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Update Payment" class="btn btn-primary btn-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function GetVendorOutstandingInvoices(VendorId) {
+        $.get("/Vendor/GetVendorOutstandingInvoice", { VendorId: VendorId }, function (res) {
+            $("#VendorOutstandingInvoiceList").html(res);
+        });
+    }
+    function getBankAccountsBP(BankId) {
+        $.get("/Vendor/GetBankAccountsBP", { BankId: BankId }, function (res) {
+            $(".BankAccountListBP").html(res);
+        });
+    }
+    $("input:checkbox").change(function () {
+        var ischecked = $(this).is(':checked');
+        if (!ischecked) {
+            var VendorId = parseInt($('select#AllVendorId').val());
+            if (VendorId > 0) {
+                $.get("/Vendor/GetVendorOutstandingInvoice", { VendorId: VendorId }, function (res) {
+                    $("#VendorOutstandingInvoiceList").html(res);
+                });
+            }
+        } else {
+            var VendorId = parseInt($('select#AllVendorId').val());
+            if (VendorId > 0) {
+                $.get("/Vendor/GetVendorOutstandingOtherInvoice", { VendorId: VendorId }, function (res) {
+                    $("#VendorOutstandingInvoiceList").html(res);
+                });
+            }
+        }
+    });
+</script>

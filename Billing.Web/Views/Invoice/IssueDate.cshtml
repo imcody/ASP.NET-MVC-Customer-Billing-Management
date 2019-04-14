@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoiceDetailsPaxViewModel>
+
+@{
+    ViewBag.Title = "Ticket Issue Date";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Ticket Issue Date
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <table class="table table-bordered table-condensed table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 10%;">SL</th>
+                                <th style="width: 40%;">Name</th>
+                                <th class="text-center" style="width: 20%;">Ticket</th>
+                                <th style="text-align: right; width: 30%;">Issue Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @{ int k = 1;
+                        foreach (Billing.ViewModel.InvoiceDetailsPaxViewModel Names in Model)
+                        {
+                            <tr>
+                                <td style="text-align: center;">@k</td>
+                                <td>
+                                    @String.Format(Names.Name)
+                                    <input type="hidden" name="@String.Format("TableId{0}", k)" value="@(Names.TableId)" />
+                                </td>
+                                <td style="text-align: center;">@String.Format(Names.TicketNo)</td>
+                                <td style="text-align: center;">
+                                    <input name="@String.Format("BookingDate{0}", k)" id="@String.Format("BookingDate{0}", k)" value="@(Names.BookingDate)" class="form-control input-xs text-right inv-bookingdate calendar" title="Booking Date" type="text"  />
+                                </td>
+                            </tr>
+                                k++;
+                            }}
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="hidden" name="InvoiceId" value="@ViewBag.InvoiceId" />
+                            <input type="hidden" name="RowCount" value="@Model.Count()" />
+                            <input type="submit" value="Update" class="btn btn-primary  btn-sm" />
+                            @Html.ActionLink("Back to Details", "Details", "Invoice", new { id = ViewBag.InvoiceID }, new { @class = "btn btn-default btn-sm" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$('document').ready(function(){
+	    Invoice.init();
+	});
+</script>

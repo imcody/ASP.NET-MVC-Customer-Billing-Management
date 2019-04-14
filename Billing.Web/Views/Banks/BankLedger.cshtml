@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Billing.Entities.BankAccountLedger>
+
+@{
+    ViewBag.Title = "Bank Ledger";
+}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                @ViewBag.AcName (@ViewBag.BankName)
+            </div>
+        </div>
+        <div class="panel-body text-center">
+            <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 10%;">SL.</th>
+                        <th style="text-align: center; width: 10%;">Date</th>
+                        <th style="text-align: left; width: 15%;">Head</th>
+                        <th style="text-align: left; width: 20%;">Notes</th>
+                        <th style="text-align: right; width: 15%;">Credit</th>
+                        <th style="text-align: right; width: 15%;">Debit</th>
+                        <th style="text-align: right; width: 15%;">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; double Debit = 0; double Credit = 0; double Balance = 0; }
+                    @foreach (var item in Model)
+                    {
+                        Balance = Balance + item.Balance;
+                        string type = Enum.GetName(typeof(Billing.ViewModel.LedgerType), item.LedgerTypes);
+                        <tr>
+                            <td style="text-align: center;">@i</td>
+                            <td style="text-align: center;">@item.SysDateTime.ToString("dd-MM-yyyy")</td>
+                            <td style="text-align: left;">@Html.DisplayFor(model => item.BankAccountLedgerHeads.LedgerHead)</td>
+                            <td style="text-align: left;">@Html.DisplayFor(model => item.Notes)</td>
+                            <td style="text-align: right;">
+                                @{
+                                    if (type.ToString() == "Credit")
+                                    {
+                                        Credit = Credit + item.Amount;
+                                        @(item.Amount.ToString("f2"))
+                                    }
+                                    else
+                                    {
+                                        Credit = Credit + 0;
+                                        0.ToString("f2");
+                                    }
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                @{
+                                    if (type.ToString() == "Debit")
+                                    {
+                                        Debit = Debit + item.Amount;
+                                        @(item.Amount.ToString("f2"))
+                                    }
+                                    else
+                                    {
+                                        Debit = Debit + 0;
+                                        0.ToString("f2");
+                                    }
+                                }
+                            </td>
+                            <td style="text-align: right;"> &#2547; @(item.Balance.ToString("f2")) </td>
+                        </tr>
+                        i++;
+                        }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" style="text-align: right;">@Credit.ToString("f2")</th>
+                        <th style="text-align: right;">@Debit.ToString("f2")</th>
+                        <th style="text-align: right;">@Balance.ToString("f2")</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <a href="@Url.Action("Index", "Banks")" class="btn btn-default btn-sm">Back To Accounts</a>
+            <input type="button" class="btn btn-primary btn-sm" value="Print" title="Print this list" />
+        </div>
+    </div>
+</div>

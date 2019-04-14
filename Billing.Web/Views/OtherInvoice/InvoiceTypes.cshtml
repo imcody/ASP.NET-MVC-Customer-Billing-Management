@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Billing.ViewModel.OtherInvocieTypeList>
+
+@{
+    ViewBag.Title = "Other Invoice Types";
+}
+
+<div class="row">
+    <div class="col-md-8" id="pnlInvoiceTypeList">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">SL.</th>
+                            <th>Invoice Type</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int k = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">@k</td>
+                                    <td>@Html.DisplayFor(modelItem => item.InvoiceType)</td>
+                                    <td style="text-align: center;">
+                                        <a href="@Html.Raw(@Url.Action("EditType", "OtherInvoice", new { @id = item.Id }))">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                k++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" id="pnlCreateNewInvoiceType">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Create Invoice Type
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("CreateType", "OtherInvoice", FormMethod.Post, new { id = "CreateType" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="InvoiceType">Type</label>
+                            <div class="col-md-10">
+                                @Html.Editor("InvoiceType", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default btn-sm" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

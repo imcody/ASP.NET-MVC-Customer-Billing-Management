@@ -1,0 +1,136 @@
+﻿@model Billing.ViewModel.TicketingReportViewModel
+
+@{
+    ViewBag.Title = "Ticket Report";
+}
+<div class="row" id="TicketingReport">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Filter Ticket Report
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "AllVendorId" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Agent</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("AgentId", (SelectList)ViewBag.AgentList, "Select Agent/Customer", new { @class = "form-control", id = "AllAgentId" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">From</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-xs calendar calendarFrom" placeholder="YYYY-MM-dd" id="VFromDate" name="VFromDate" title="For searching invoices of specific date, put only date in the From Date textbox." autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")">
+                                    <span class="input-group-addon trigger-calendar-from">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">To</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-xs calendar calendarTo" placeholder="YYYY-MM-dd" id="VToDate" name="VToDate" title="For searching invoices of a date range, put date in both From Date and To Date textbox." autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")">
+                                    <span class="input-group-addon trigger-calendar-from">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="FilterTicketingReport" id="FilterTicketingReport" class="btn btn-primary btn-sm" value="Filter Ticketing Report" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="panel panel-default">
+            <div class="panel-body" id="divTicketingReport">
+                @{Html.RenderPartial("Report/_TicketingReport", Model.TicketReport);}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="DailyStatement" class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Daily Statement
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Date</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-xs calendar calendarTo" placeholder="YYYY-MM-dd" id="DSCalendar" name="VToDate" title="Get Datewise daily income statement." autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")">
+                                    <span class="input-group-addon trigger-calendar-from">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="GetDateWiseDailyStatement" id="GetDateWiseDailyStatement" class="btn btn-primary btn-sm" value="Get Daily Statement" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body" id="FakeDailyStatement">
+                @{Html.RenderPartial("Report/FakeDailyStatement", Model);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("input#GetDateWiseDailyStatement").click(function () {
+        var sDate = $("input#DSCalendar").val();
+        if (sDate.length == 10) {
+            $.get('/Report/FakeDailyStatement', { SearchDate: sDate }, function (res) {
+                $('div#FakeDailyStatement').html(res);
+            });
+        }
+    });
+    $('input#FilterTicketingReport').click(function () {
+        var AgentId = 0;
+        var VendorId = 0;
+        var Start = "@DateTime.Now.ToString("MM/dd/yyyy")";
+        var Finis = "@DateTime.Now.ToString("MM/dd/yyyy")";
+        var cmbVendorId = $('select#AllVendorId').val();
+        var cmbAgentId = $('select#AllAgentId').val();
+        var inpStart = $('input#VFromDate').val();
+        var inpFinis = $('input#VToDate').val();
+        if (cmbAgentId.length > 0) { AgentId = cmbAgentId; }
+        if (cmbVendorId.length > 0) { VendorId = cmbVendorId; }
+        if (inpStart.length > 0) { Start = inpStart; }
+        if (inpFinis.length > 0) { Finis = inpFinis; }
+        $.get('/Report/FilterTicketingReport', { AgentId: parseInt(AgentId), VendorId: parseInt(VendorId), Starting: Start, Finising: Finis }, function (res) {
+            $('div#divTicketingReport').html(res);
+        });
+    });
+</script>

@@ -1,0 +1,23 @@
+﻿@model Billing.ViewModel.TicketingReportViewModel
+<table class="table table-bordered table-condensed table-hover table-responsive table-striped reporting-table">
+    <thead>
+        <tr>
+            <th style="text-align: right;">Cash</th>
+            <th style="text-align: right;">Cheque</th>
+            <th style="text-align: right;">Credit Card</th>
+            <th style="text-align: right;">Debit Card</th>
+            <th style="text-align: right;">Bank Deposit</th>
+            <th style="text-align: right;">Daily Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: right;">@Model.DailyStatement.CashCollection.ToString("f2")</td>
+            <td style="text-align: right;">@Model.DailyStatement.ChequeCollection.ToString("f2")</td>
+            <td style="text-align: right;">@Model.DailyStatement.CCardCollection.ToString("f2")</td>
+            <td style="text-align: right;">@Model.DailyStatement.DCardCollection.ToString("f2")</td>
+            <td style="text-align: right;">@Model.DailyStatement.BankDeposit.ToString("f2")</td>
+            <td style="text-align: right;">@Model.DailyStatement.DailyTotal.ToString("f2")</td>
+        </tr>
+    </tbody>
+</table>

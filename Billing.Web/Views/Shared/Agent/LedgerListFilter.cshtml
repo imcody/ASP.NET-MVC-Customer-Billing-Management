@@ -1,0 +1,36 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            Filter Agent Ledger
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-3">
+            <input type="text" class="form-control input-sm calendar" name="FromDate" id="FromDate" placeholder="From Date" autocomplete="off" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control input-sm calendar" name="ToDate" id="ToDate" placeholder="To Date" autocomplete="off" />
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownList("LedgerHeadFilter", (SelectList)ViewBag._LedgerHead, "Ledger Head", new { @class = "form-control", id = "LedgerHeadFilter" })
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownList("PaymentMethod", EnumHelper.GetSelectList(typeof(Billing.ViewModel.PaymentMethod)), "Payment Method", new { @class = "form-control", id = "PaymentMethod" })
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="panel-body">
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary btn-sm" onclick="return SearchByDateRange()">Search by Date Range</button>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary btn-sm" onclick="return SearchByDateRangeLedgerHead()">Search by Date &amp; Ledger Head</button>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary btn-sm" onclick="return FilterLedgerList()">Search by Date &amp; Payment Method</button>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary btn-sm" onclick="return FilterLedgerList()">Search by Date &amp; Ledger Head &amp; Payment Method</button>
+        </div>
+    </div>
+</div>

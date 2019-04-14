@@ -1,0 +1,280 @@
+﻿@model Billing.ViewModel.InvoiceBookingViewModel
+@{
+    ViewBag.Title = "Create Invoice";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-body invoice-form">
+            <div class="white-block">
+                <div class="header-bar border">
+                    <h3>Confirm Invoice</h3>
+                </div>
+                <div class="body-bar">
+
+                    @using (Html.BeginForm("Booking", "Invoice", null, FormMethod.Post, new { role = "form", @id = "bookingForm", onsubmit = "return CheckCreditLimit()" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.InvoiceId)
+                        @Html.HiddenFor(model => model.VendorId)
+                        <input type="hidden" name="PassengerCount" value="@Model.PaxList.Count" />                        
+                        <div class="col-md-6">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">INV. DATE</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.SysCreateDate.ToString("dd-MM-yy")</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">INV. NO</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.InvoiceId.ToString().PadLeft(6, '0')</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">@ViewBag.InvType</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentName.ToString()</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">PNR.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.Pnr</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">GDS BOOKING DATE.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.GdsBookingDate</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">AIRLINES</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AirlinesName</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">VENDOR</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.VendorName</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">VENDOR INV. NO</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.VendorInvNo, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.VendorInvNo, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">EDP</label>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            @Html.EditorFor(model => model.ExpectedPaymentDate, new { htmlAttributes = new { @class = "form-control input-xs calendar", placeholder = "YYYY-MM-DD" } })
+                                            <span class="input-group-addon trigger-calendar-from">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">ADRESS.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentAddress</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">POSTCODE.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentPostCode</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">TELEPHONE.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentTelephone</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">MOBILE.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentMobile</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">FAX.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentFax</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">EMAIL.</label>
+                                    <div class="col-md-8">
+                                        <span class="form-control input-xs"> @Model.AgentEmail</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" title="Cancellation Charge">CANCEL. CHARGE.</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.CancellationChargeBefore, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.CancellationChargeBefore, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.CancellationChargeAfter, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.CancellationChargeAfter, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" title="Cancellation Charge">CANCEL. DATE.</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.CancellationDateBefore, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.CancellationDateBefore, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.CancellationDateAfter, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.CancellationDateAfter, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" title="Cancellation Charge">NO SHOW</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.NoShowBefore, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.NoShowBefore, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.NoShowAfter, new { htmlAttributes = new { @class = "form-control input-xs" } })
+                                        @Html.ValidationMessageFor(model => model.NoShowAfter, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-sm">
+								<tr>
+                                    <th style="text-align: center;">SL.</th>
+                                    <th></th>
+									<th style="text-align: left;">NAME</th>
+									<th>Ticket No</th>
+                                    <th><input type="checkbox" name="chkAllFare" class="chkAllFare" id="chkAllFare" />Fare</th>
+                                    <th><input type="checkbox" name="chkAllTax" class="chkAllTax" id="chkAllTax" /> Tax </th>
+									<th><input type="checkbox" name="chkAllAmount" class="chkAllAmount" id="chkAllAmount" /> Amount </th>
+								</tr>
+
+                            @{  int k = 1;
+                                foreach (Billing.Entities.InvoiceName Names in Model.PaxList)
+                                {
+                                    int selected = (int)Names.PassengerTypes;
+                                    <tr class="inv-row">
+                                        <td style="text-align: center;">
+                                            @k
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList(String.Format("PassengerTypes{0}", k), EnumHelper.GetSelectList(typeof(Billing.ViewModel.PassengerType)), "Pax Type", new { @class = "form-control" })
+                                            <script>
+                                            var index = '@k';
+                                            var value = '@selected';
+                                            $('#PassengerTypes' + index).val($('#PassengerTypes' + index + ' option:eq('+ value +')').val());
+                                            </script>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="@String.Format("InvoiceName{0}",k)" value="@Names.Id" />
+                                            @Names.Name.ToString()
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-xs inv-ticket" value="" name="@String.Format("TicketNo{0}",k)" id="@String.Format("TicketNo{0}",k)" autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-xs inv-fare" value="0" name="@String.Format("CNatFare{0}",k)" id="@String.Format("CNatFare{0}",k)" autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-xs inv-tax" value="0" name="@String.Format("Tax{0}",k)" id="@String.Format("Tax{0}",k)" autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-xs inv-amount" value="0" name="@String.Format("tAmount{0}",k)" id="@String.Format("tAmount{0}",k)" autocomplete="off" />
+                                        </td>
+                                    </tr>
+                                    k++;
+                                }
+                            }
+                                <tr class="right-span">
+                                    <td colspan="6">Total:&nbsp;</td>
+                                    <td>
+                                        <span class="form-control input-xs inv-total"></span>
+                                    </td>
+                                </tr>                            
+                                <tr class="right-span">
+                                    <td colspan="6">Grand Total:&nbsp;</td>
+                                    <td>
+                                        <span class="form-control input-xs inv-grandtotal"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-md-12">
+                            <div class="panel-body text-center">
+                                <input type="hidden" name="CreditLimit" id="CreditLimit" value="@ViewBag.CreditLimit" />
+                                <input type="hidden" name="Balance" id="Balance" value="@ViewBag.Balance" />
+                                <input type="hidden" name="InvType" id="InvType" value="@ViewBag.InvType" />
+                                <input type="hidden" name="GrandTotal" id="GrandTotal" value="" />
+                                <input type="submit" value="Create Invoice" class="btn btn-default btn-sm pull-right" onclick="return CheckCreditLimit()" />
+                                @Html.ActionLink("Save As Draft", "Draft", "Invoice", new { id = Model.InvoiceId }, new { @class = "btn btn-warning btn-sm pull-right", @id = "DraftInvoice" })
+                                @Html.ActionLink("Cancel", "Delete", "Invoice", new { id = Model.InvoiceId }, new { @class="btn btn-danger btn-sm pull-right", @id = "CancelInvoice" })
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                                }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$('document').ready(function(){
+		Invoice.init();
+	});
+	function CheckCreditLimit() {
+	    var r = confirm("Are you sure you want to confirm the invoice?");
+	    if (r == false) {
+	        return false;
+	    }
+	    var Credit = parseInt($('#CreditLimit').val());
+	    var Balance = parseInt($('#Balance').val());
+	    var InvType = $('#InvType').val();
+	    var gTotal = parseInt($('#GrandTotal').val());
+	    if (InvType == "Agent") {
+	        if ((gTotal + Balance) > Credit) {
+	            alert('Sorry!! The invoice total exceeds the agent credit limit.');
+	            return false;
+	        }
+	        else {
+	            return true;
+	        }
+	    }
+	}
+	$("input#chkAllTax:checkbox").change(function () {
+	    var ischecked = $(this).is(':checked');
+	    if (!ischecked) {
+	        $('input.inv-tax').val(0);
+	    } else {
+	        $('input.inv-tax').val($('input#Tax1').val());
+	    }
+	    $('input.inv-tax').keyup();
+	});
+	$("input#chkAllAmount:checkbox").change(function () {
+	    var ischecked = $(this).is(':checked');
+	    if (!ischecked) {
+	        $('input.inv-amount').val(0);
+	    } else {
+	        $('input.inv-amount').val($('input#tAmount1').val());
+	    }
+	    $('input.inv-amount').keyup();
+	});
+</script>

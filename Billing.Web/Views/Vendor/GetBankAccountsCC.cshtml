@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Billing.Entities.BankAccount>
+<div class="form-group">
+    <label class="control-label col-md-2" for="BankAccounts">A/C No</label>
+    <div class="col-md-10">
+        <select id="BankAccountIdCC" name="BankAccountIdCC" required class="form-control">
+            <option value="0">Account No</option>
+            @foreach (var item in Model)
+            {
+                <option value="@item.Id">@item.AccountNames - @item.AccountNo</option>
+            }
+        </select>
+    </div>
+</div>

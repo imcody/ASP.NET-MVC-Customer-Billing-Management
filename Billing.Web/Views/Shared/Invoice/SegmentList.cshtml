@@ -1,0 +1,45 @@
+﻿<div class="filter-section" id="Segments">
+    <div class="filter-head">
+        <a href="javascript:;" class="sidebar-collapse">
+            Segments
+        </a>
+    </div>
+    <div class="filter-body">
+        <table class="table table-sm text-right table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">Airlines</th>
+                    <th style="text-align: center;">Flight</th>
+                    <th style="text-align: center;">Class</th>
+                    <th style="text-align: center;">Date</th>
+                    <th style="text-align: center;">From</th>
+                    <th style="text-align: center;">To</th>
+                    <th style="text-align: center;">Dep</th>
+                    <th style="text-align: center;">Arr</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: center;">Flight Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (Billing.ViewModel.InvoiceDetailsSegmentViewModel segment in Model.invSegments)
+                    {
+                        <tr>
+                            <td style="text-align: center;">@segment.AirlinesCode</td>
+                            <td style="text-align: center;">@segment.FlightNo</td>
+                            <td style="text-align: center;">@segment.SegmentClass</td>
+                            <td style="text-align: center;">@segment.DepartureDate</td>
+                            <td style="text-align: center;">@segment.DepartureFrom</td>
+                            <td style="text-align: center;">@segment.DepartureTo</td>
+                            <td style="text-align: center;">@segment.DepartureTime</td>
+                            <td style="text-align: center;">@segment.ArrivalTime</td>
+                            <td style="text-align: center;">@segment.SegmentStatus</td>
+                            <td style="text-align: center;">@segment.FlightDate</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

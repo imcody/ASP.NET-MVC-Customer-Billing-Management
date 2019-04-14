@@ -1,0 +1,47 @@
+﻿@using Billing.ViewModel
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+<div class="login-container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center m-b-md">
+                <h3>Flight Concept Ltd</h3>
+            </div>
+            <div class="hpanel">
+                <div class="panel-body">
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form", @id = "loginForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "example@gmail.com", title = "Please enter you username", required = "required", autofocus = "on" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger help-block small" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "example@gmail.com", title = "Please enter you username", required = "" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger help-block small" })
+                        </div>
+
+
+                        @*<div class="form-group">
+                            <label class="control-label" for="username">Username</label>
+                            <input type="text" placeholder="example@gmail.com" title="Please enter you username" required="" value="" name="username" id="username" class="form-control" />
+                            <span class="help-block small">Your unique username to app</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="password">Password</label>
+                            <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control" />
+                            <span class="help-block small">Yur strong password</span>
+                        </div>*@
+                        <button class="btn btn-success btn-block" type="submit">Login</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

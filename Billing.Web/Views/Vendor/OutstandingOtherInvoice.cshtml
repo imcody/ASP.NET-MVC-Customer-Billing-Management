@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Billing.ViewModel.OtherInvoiceList>
+
+@{
+    ViewBag.Title = "Other Invoices List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Filter Other Invoice List
+                </div>
+            </div>
+            <div id="pnlOutstandingInvoiceFileter" class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "AllVendorId" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="GetOutstandingOtherInvoicesVendor" id="GetOutstandingOtherInvoicesVendor" class="btn btn-primary btn-sm" value="Get Outstanding Other Invoices" onclick="return SearchVendorOutstandingOtherInvoice()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div id="pnlOutstandingInvoiceList" class="panel-body">
+                @{Html.RenderPartial("OtherInvoice/OtherInvoicePayment", Model);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function SearchVendorOutstandingOtherInvoice() {
+        var VendorId = parseInt($('#AllVendorId').val());
+        if (VendorId > 0) {
+            $.get('/Vendor/SearchVendorOutstandingOtherInvoice', { VendorId: VendorId }, function (res) {
+                $('div#pnlOutstandingInvoiceList').html(res);
+            });
+        }
+        else {
+            alert('Please select an agent first');
+            return false;
+        }
+    }
+</script>

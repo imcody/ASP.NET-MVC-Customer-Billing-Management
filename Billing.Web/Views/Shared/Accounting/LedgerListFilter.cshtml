@@ -1,0 +1,20 @@
+﻿<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-2">
+            <input type="text" class="form-control input-sm calendar" name="FromDate" id="FromDate" placeholder="From Date" autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="form-control input-sm calendar" name="ToDate" id="ToDate" placeholder="To Date" autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownList("LedgerHeadFilter", (SelectList)ViewBag._LedgerHead, "Ledger Head", new { @class = "form-control", id = "LedgerHeadFilter" })
+        </div>
+        <div class="col-md-3">
+            @Html.DropDownList("PaymentMethod", EnumHelper.GetSelectList(typeof(Billing.ViewModel.PaymentMethod)), "Payment Method", new { @class = "form-control", id = "PaymentMethod" })
+        </div>
+        <div class="col-md-2">
+            <input type="hidden" name="StatementType" id="StatementType" value="@ViewBag.Type" />
+            <button type="button" id="LedgerListFilter" class="btn btn-primary btn-sm" onclick="return FilterLedgerList()">Search</button>
+        </div>
+    </div>
+</div>

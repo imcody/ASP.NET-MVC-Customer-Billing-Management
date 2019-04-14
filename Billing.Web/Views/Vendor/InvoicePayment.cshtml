@@ -1,0 +1,148 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoicePaymentHistoryVendor>
+
+@{
+    ViewBag.Title = "Vendor Invoice Payment History";
+}
+<div class="row">
+    <div id="AgentInvoicePayment" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Vendor Invoice Payment History
+                </div>
+            </div>
+            <div id="SearchByInvoiceAndAgent" class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "AllVendorId" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Invoice</label>
+                            <div class="col-md-10">
+                                <input type="text" name="InvoiceId" id="AllInvoiceId" class="form-control input-sm" placeholder="Invoice number without leading Zero..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="SearchByAgent" id="SearchByVendor" class="btn btn-primary btn-sm" value="Search By Vendor" onclick="return SearchByVendor()" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <input type="button" name="SearchByInvoice" id="SearchByInvoice" class="btn btn-primary btn-sm" value="Search By Invoice" onclick="return SearchByInvoice()" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="SearchByDateRange" class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">From</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-xs calendar calendarFrom" placeholder="YYYY-MM-dd" id="VFromDate" name="VFromDate" title="For searching invoices of specific date, put only date in the From Date textbox." autocomplete="off">
+                                    <span class="input-group-addon trigger-calendar-from">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">To</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-xs calendar calendarTo" placeholder="YYYY-MM-dd" id="VToDate" name="VToDate" title="For searching invoices of a date range, put date in both From Date and To Date textbox." autocomplete="off">
+                                    <span class="input-group-addon trigger-calendar-from">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="return SearchByDateRange()">Search By Date Range</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-left">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="return SearchByDateVendor()">Search By Date &amp; Vendor</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="VendorInvoicePaymentHistory" class="panel-body">
+                @{Html.RenderPartial("Vendor/VendorInvoicePayment", Model);}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function SearchByVendor() {
+        var VendorId = parseInt($('#AllVendorId').val());
+        if (VendorId > 0) {
+            $.get('/Vendor/InvoicePaymentHistory', { searchType: 'SearchByVendor', VendorId: VendorId, InvoiceId: 0 }, function (res) {
+                $('div#VendorInvoicePaymentHistory').html(res);
+            });
+        }
+        else {
+            alert('Please select an agent first');
+            return false;
+        }
+    }
+    function SearchByInvoice() {
+        var InvoiceId = parseInt($('#AllInvoiceId').val());
+        if (InvoiceId > 0) {
+            $.get('/Vendor/InvoicePaymentHistory', { searchType: 'SearchByInvoice', VendorId: 0, InvoiceId: InvoiceId }, function (res) {
+                $('div#VendorInvoicePaymentHistory').html(res);
+            });
+        }
+        else {
+            alert('Please provide the invoice number');
+            return false;
+        }
+    }
+    function SearchByDateRange() {
+        var sDate = $('#VFromDate').val();
+        var eDate = $('#VToDate').val();
+        if (sDate !== "") {
+            $.get('/Vendor/InvoicePaymentHistory', { searchType: 'SearchByDateRange', VendorId: 0, InvoiceId: 0, sDate: sDate, eDate: eDate }, function (res) {
+                $('div#VendorInvoicePaymentHistory').html(res);
+            });
+        }
+        else {
+            alert('Please provide at least starting date');
+            return false;
+        }
+    }
+    function SearchByDateVendor() {
+        var VendorId = parseInt($('#AllVendorId').val());
+        if (VendorId < 1 || isNaN(VendorId)) {
+            alert('Please select an Agent');
+            return false;
+        }
+        var sDate = $('#VFromDate').val();
+        var eDate = $('#VToDate').val();
+        if (sDate !== "") {
+            $.get('/Vendor/InvoicePaymentHistory', { searchType: 'SearchByDateVendor', VendorId: VendorId, InvoiceId: 0, sDate: sDate, eDate: eDate }, function (res) {
+                $('div#VendorInvoicePaymentHistory').html(res);
+            });
+        }
+        else {
+            alert('Please provide at least starting date');
+            return false;
+        }
+    }
+    
+</script>

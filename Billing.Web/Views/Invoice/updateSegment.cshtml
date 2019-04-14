@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoiceDetailsSegmentViewModel>
+
+@{
+    ViewBag.Title = "Update Invoice Segment";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <table class="table table-bordered table-condensed table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 10%;">Airlines</th>
+                                <th style="text-align: center; width: 9%;">Flight</th>
+                                <th style="text-align: center; width: 9%;">Class</th>
+                                <th style="text-align: center; width: 10%;">Date</th>
+                                <th style="text-align: center; width: 10%;">From</th>
+                                <th style="text-align: center; width: 10%;">To</th>
+                                <th style="text-align: center; width: 10%;">Dep</th>
+                                <th style="text-align: center; width: 10%;">Arr</th>
+                                <th style="text-align: center; width: 9%;">Status</th>
+                                <th style="text-align: center; width: 13%;">Flight Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{  int k = 1;
+                                foreach (var item in Model)
+                                {
+                                    string selected = item.AirlinesCode;
+                                    string[] pDate = item.FlightDate.Split('-');
+                                    string joined = String.Join("/", pDate[1], pDate[2], pDate[0]);
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            @Html.DropDownList(String.Format("AirlinesCode{0}", k), (SelectList)ViewBag.AirlinesCode, "Airlines", new { @class = "form-control text-center" })
+                                            <script>
+                                            var index = '@k';
+                                            var value = '@selected';
+                                            $("select#AirlinesCode" + index + " option[value='" + value + "']").attr("selected", "selected");
+                                            </script>
+                                            <input type="hidden" name="@String.Format("Id{0}", k)" id="@String.Format("Id{0}", k)" value="@(item.TableId)" />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("FlightNo{0}", k)" id="@String.Format("FlightNo{0}", k)" value="@(item.FlightNo)" class="form-control text-center input-xs inv-flightno" title="@(item.FlightNo)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("SegmentClass{0}", k)" id="@String.Format("SegmentClass{0}", k)" value="@(item.SegmentClass)" class="form-control text-center input-xs inv-segmentclass" title="@(item.SegmentClass)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("DepartureDate{0}", k)" id="@String.Format("DepartureDate{0}", k)" value="@(item.DepartureDate)" class="form-control text-center input-xs inv-departuredate" title="@(item.DepartureDate)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("DepartureFrom{0}", k)" id="@String.Format("DepartureFrom{0}", k)" value="@(item.DepartureFrom)" class="form-control text-center input-xs inv-departurefrom" title="@(item.DepartureFrom)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("DepartureTo{0}", k)" id="@String.Format("DepartureTo{0}", k)" value="@(item.DepartureTo)" class="form-control text-center input-xs inv-departureto" title="@(item.DepartureTo)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("DepartureTime{0}", k)" id="@String.Format("DepartureTime{0}", k)" value="@(item.DepartureTime)" class="form-control text-center input-xs inv-departuretime" title="@(item.DepartureTime)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("ArrivalTime{0}", k)" id="@String.Format("ArrivalTime{0}", k)" value="@(item.ArrivalTime)" class="form-control text-center input-xs inv-arrivaltime" title="@(item.ArrivalTime)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("SegmentStatus{0}", k)" id="@String.Format("SegmentStatus{0}", k)" value="@(item.SegmentStatus)" class="form-control text-center input-xs inv-segmentstatus" title="@(item.SegmentStatus)" autocomplete="off" required />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="text" name="@String.Format("FlightDate{0}", k)" id="@String.Format("FlightDate{0}", k)" value="@(joined)" class="form-control text-center input-xs inv-flightdate calendar" title="@(joined)" autocomplete="off" required />
+                                        </td>
+                                    </tr>
+                                    k++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="hidden" name="InvoiceId" value="@ViewBag.InvoiceId" />
+                            <input type="hidden" name="RowCount" value="@Model.Count()" />
+                            <input type="button" value="Fill All" class="btn btn-primary  btn-sm" title="Put same value for all tickets" onclick="Invoice.FillUpTicketSegments()" />
+                            <input type="submit" value="Update" class="btn btn-primary  btn-sm" />
+                            @Html.ActionLink("Back to Details", "Details", "Invoice", new { id = ViewBag.InvoiceID }, new { @class = "btn btn-default btn-sm" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$('document').ready(function(){
+	    Invoice.init();
+	});
+</script>

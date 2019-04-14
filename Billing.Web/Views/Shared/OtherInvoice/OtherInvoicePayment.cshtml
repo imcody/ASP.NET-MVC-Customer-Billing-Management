@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Billing.ViewModel.OtherInvoiceList>
+<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 10%;">INV.</th>
+            <th style="width: 14%;">Agent/Cust</th>
+            <th style="width: 13%;">Type</th>
+            <th style="width: 13%;">User</th>
+            <th style="text-align: center; width: 10%;">Date</th>
+            <th style="text-align: right; width: 10%;" title="Vendor Charge">V. Amount</th>
+            <th style="text-align: right; width: 10%;" title="Vendor Paid">V. Paid</th>
+            <th style="text-align: right; width: 10%;" title="Vendor Due">V. Due</th>
+            <th style="text-align: right; width: 10%;">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int k = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;">@item.InvoiceId</td>
+                    <td>@item.Agent</td>
+                    <td>@item.InvoiceType</td>
+                    <td>@item.User</td>
+                    <td style="text-align: center;">@item.CreatedOn</td>
+                    <td style="text-align: right;">@item.VAmount.ToString("f2")</td>
+                    <td style="text-align: right;">@item.VPaid.ToString("f2")</td>
+                    <td style="text-align: right;">@item.VDue.ToString("f2")</td>
+                    <td style="text-align: center;">
+                        <input type="hidden" name="@String.Format("InvoiceId{0}", k)" id="@String.Format("InvoiceId{0}", k)" value="@item.InvoiceId" />
+                        <input type="hidden" name="@String.Format("Total{0}", k)" id="@String.Format("Total{0}", k)" value="@item.VAmount" />
+                        <input type="hidden" name="@String.Format("Paid{0}", k)" id="@String.Format("Paid{0}", k)" value="@item.VPaid" />
+                        <input name="@String.Format("PaidAmount{0}", k)" id="@String.Format("PaidAmount{0}", k)" class="form-control input-sm" autocomplete="off" value="0" style="text-align: right;" required="required" type="text"  />
+                    </td>
+                </tr>
+                k++; 
+            }
+        }
+    </tbody>
+</table>
+<input type="hidden" name="InvoiceCount" id="InvoiceCount" value="@Model.Count()" />

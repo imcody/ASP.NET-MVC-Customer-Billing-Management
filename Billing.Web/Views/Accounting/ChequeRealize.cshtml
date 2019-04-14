@@ -1,0 +1,152 @@
+﻿@model Billing.ViewModel.ChequeRealizeViewModel
+
+@{
+    ViewBag.Title = "Cheque Realize";
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div class="panel-body" id="ChequeRealizePanelBody">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.InvoiceId)
+                    @Html.HiddenFor(model => model.IPChequeDetailId)
+                    @Html.HiddenFor(model => model.Agents.Id)
+                    @Html.HiddenFor(model => model.Amount)
+                    @Html.HiddenFor(model => model.Remarks)
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Bank</label>
+                            <div class="col-md-8">
+                                @Html.DisplayFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Cheque No</label>
+                            <div class="col-md-8">
+                                @Html.DisplayFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Account No</label>
+                            <div class="col-md-8">
+                                @Html.DisplayFor(model => model.AccountNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.AccountNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Amount</label>
+                            <div class="col-md-8">
+                                @Model.Amount.ToString("f2")
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Remarks, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DisplayFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Invoice No</label>
+                            <div class="col-md-8">
+                                @Model.InvoiceId.ToString().PadLeft(6, '0')
+                                @Html.ValidationMessageFor(model => model.InvoiceId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Agent</label>
+                            <div class="col-md-10">
+                                @Html.DisplayFor(model => model.Agents.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Agents.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Realize To</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("BankNames", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Realize To", new { @class = "form-control", id = "BankNames", onchange = "return getBankAccounts()" })
+                            </div>
+                        </div>
+                        <div id="BankAccounts">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Notes</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.RealizationRemarks, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.RealizationRemarks, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Realize" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "FloatingCheque", "Accounting", null, new { @class="btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Account Info
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                    <tbody id="AccountInfo">
+                        <tr>
+                            <td style="width: 25%;">A/C Name</td>
+                            <td id="acName"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 25%;">A/C No</td>
+                            <td id="acNo"></td>
+                        </tr>
+                    </tbody>
+                    <tbody id="balanceInfo">
+                        <tr>
+                            <td style="width: 25%;">Balance</td>
+                            <td id="balance"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function getBankAccounts() {
+        var BankId = $("#BankNames").val();
+        $.get("/Accounting/GetBankAccounts", { BankId: BankId }, function (res) {
+            $("#BankAccounts").html(res);
+        });
+    }
+    $(document).ready(function () {
+        getBankAccounts();
+    });
+    function BankBalance() {
+        var BankAccountId = $("#BankAccountId").val();
+        $.get("/Banks/GetBankBalance", { AccountId: BankAccountId }, function (res) {
+            $("#acNo").html(res.AcNo);
+            $("#acName").html(res.AcName);
+            $("#balance").html(res.Balance);
+        });
+    }
+</script>

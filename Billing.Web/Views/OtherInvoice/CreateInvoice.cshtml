@@ -1,0 +1,215 @@
+﻿@model Billing.Entities.OtherInvoice
+
+@{
+    ViewBag.Title = "Create Other Invoice";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Agent/Cust</label>
+                            <div class="col-md-10">
+                                <select name="AgentCust" id="AgentCust" required onchange="return GetProfileType(this.value);" class="form-control">
+                                    <option value="">Agent/Customer</option>
+                                    <option value="1">Agent</option>
+                                    <option value="2">Customer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" id="AgentCustoProfile">Agent/Cust</label>
+                            <div class="col-md-10">
+                                <select name="AgentId" id="AgentId" class="form-control" onchange="return getAgentInformation(this.value);" required>
+                                    <option value="">Select Agent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "VendorId", onchange = "return getVendorInformation(this.value);", required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Invoice Type</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("OtherInvoiceTypeId", (SelectList)ViewBag.InvoiceType, "Invoice Type", new { @class = "form-control", id = "OtherInvoiceTypeId", required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Reference, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Reference, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Reference, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">EDP</label>
+                            <div class="col-md-10">
+                                <input class="form-control calendar text-box single-line" id="ExpectedPayDate" name="ExpectedPayDate" type="text" autocomplete="off">
+                                @*@Html.EditorFor(model => model.ExpectedPayDate, new { htmlAttributes = new { @class = "form-control calendar" } })*@
+                                @Html.ValidationMessageFor(model => model.ExpectedPayDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor Inv No.</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.VendorInvNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VendorInvNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Details, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(model => model.Details, new { @class = "form-control" } )
+                                @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span id="AgentCustAmount"></span> Amount</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CustomerAgentAmount, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                @Html.ValidationMessageFor(model => model.CustomerAgentAmount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor Amount</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.VendorAmount, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                @Html.ValidationMessageFor(model => model.VendorAmount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Agent or Customer Information
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive">
+                    <tr>
+                        <td style="width: 30%;">Name</td>
+                        <td id="ProfileName"></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td id="ProfileAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>Mobile</td>
+                        <td id="ProfileMobile"></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td id="ProfileEmail"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Vendor Information
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive">
+                    <tr>
+                        <td style="width: 30%;">Name</td>
+                        <td id="VendorName"></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td id="VendorAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>Mobile</td>
+                        <td id="VendorMobile"></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td id="VendorEmail"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function GetProfileType(invFor) {
+        if (invFor == 1) {
+            $('span#AgentCustAmount').html("Agent");
+            $('label#AgentCustoProfile').html("Agent");
+        } else if (invFor == 2) {
+            $('span#AgentCustAmount').html("Customer");
+            $('label#AgentCustoProfile').html("Customer");
+        }
+        $.ajax({
+            url: '/Invoice/GetAgentList',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ type: invFor }),
+            success: function (result) {
+                $("select#AgentId").html("");
+                $.each($.parseJSON(result), function (i, city) {
+                    $("select#AgentId").append($('<option></option>').val(city.Id).html(city.Name))
+                })
+                ModalLoader("hide");
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+                ModalLoader("hide");
+            },
+        });
+    }
+    function getAgentInformation(agent) {
+        $.get("/Agent/GetAgentInformation", { AgentId: parseInt(agent) }, function (res) {
+            $("#ProfileName").html(res.Name);
+            $("#ProfileAddress").html(res.Address);
+            $("#ProfileMobile").html(res.Mobile);
+            $("#ProfileEmail").html(res.Email);
+        });
+    }
+    function getVendorInformation(vendor) {
+        $.get("/Vendor/GetVendorInformation", { VendorId: parseInt(vendor) }, function (res) {
+            $("#VendorName").html(res.Name);
+            $("#VendorAddress").html(res.Address);
+            $("#VendorMobile").html(res.Mobile);
+            $("#VendorEmail").html(res.Email);
+        });
+    }
+</script>

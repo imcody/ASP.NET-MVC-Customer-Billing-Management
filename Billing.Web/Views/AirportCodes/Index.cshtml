@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Billing.Entities.AirportCode>
+
+@{
+    ViewBag.Title = "Airport Codes";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Airport Codes
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                    <tr>
+                        <th style="text-align: center;">
+                            SL.
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Country)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Code)
+                        </th>
+                        <th style="text-align: center;">
+                            Delete
+                        </th>
+                    </tr>
+                    @{ int i = 1; }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="text-align: center;">
+                                @i
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Country)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+                            <td style="text-align: center;">
+                                <a href="@Html.Raw(@Url.Action("Delete", "AirportCodes", new { @id = item.Id }))">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 text-center">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a href="@Url.Action("Create", "AirportCodes")" class="btn btn-primary btn-sm">Create New</a>
+            </div>
+        </div>
+    </div>
+</div>

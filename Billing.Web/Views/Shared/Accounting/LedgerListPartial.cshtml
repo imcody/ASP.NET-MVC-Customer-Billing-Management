@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Billing.ViewModel.GeneralLedgerListViewModel>
+<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 5%;">SL.</th>
+            <th style="text-align: center; width: 10%;">Date</th>
+            <th style="text-align: center; width: 10%;">User</th>
+            <th style="text-align: left; width: 20%;">Head</th>
+            <th style="text-align: left; width: 7%;">Method</th>
+            <th style="text-align: left; width: 25%;">Notes</th>
+            <th style="text-align: left; width: 8%;">Crt/Dby</th>
+            <th style="text-align: right; width: 15%;">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int k = 1;   double Total = 0;
+            foreach (var item in Model)
+            {
+                Total = (Total + item.Amount);
+                <tr>
+                    <td style="text-align: center;">@k</td>
+                    <td style="text-align: center;">@item.LedgerDate</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.UserName)</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.LedgerHead)</td>
+                    <td style="text-align: left;">@item.PaymentMethod</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.Notes)</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.LedgerType)</td>
+                    <td style="text-align: right;">@item.Amount.ToString("f2")</td>
+                </tr>
+                k++;
+            } 
+            <tr>
+                <td colspan="7" style="text-align: right;">Total</td>
+                <td style="text-align: right;">@Total.ToString("f2")</td>
+            </tr>
+            }
+    </tbody>
+</table>

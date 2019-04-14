@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Billing.ViewModel.VendorLedgerViewModel>
+<table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 5%;"> SL.</th>
+            <th style="text-align: center; width: 7%;">Date</th>
+            <th style="text-align: left; width: 15%;">Head</th>
+            <th style="text-align: left; width: 20%;">Remarks</th>
+            <th style="text-align: right; width: 15%;">Credit</th>
+            <th style="text-align: right; width: 15%;">Debit</th>
+            <th style="text-align: right; width: 15%;">Balance</th>
+        </tr>
+    </thead>
+    <tbody id="agentLedgerTbody">
+        @{int k = 1;}
+        @foreach (var item in Model)
+        {
+            string type = item.LedgerType;
+            <tr>
+                <td style="text-align: center;">@k</td>
+                <td style="text-align: center;">@item.LedgerDate</td>
+                <td style="text-align: left;">@item.LedgerHead</td>
+                <td style="text-align: left;">@item.Notes</td>
+                <td style="text-align: right;">@(item.Credit.ToString("f2"))</td>
+                <td style="text-align: right;">@(item.Debit.ToString("f2"))</td>
+                <td style="text-align: right;"> @(item.Balance.ToString("f2")) </td>
+            </tr>
+            k++;
+        }
+    </tbody>
+</table>

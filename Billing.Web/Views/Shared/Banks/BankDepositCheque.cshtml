@@ -1,0 +1,24 @@
+﻿<div class="form-group">
+    <label class="control-label col-md-2 no-pad-top">Bank of Cheque</label>
+    <div class="col-md-10">
+        @Html.DropDownList("BankOfChequeId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Select Bank", new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-md-2 no-pad-top">Cheque No.</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control input-xs" name="ChequeNo" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-md-2 no-pad-top">Account No.</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control input-xs" name="AccountNo" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-md-2 no-pad-top">Sort Code.</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control input-xs" name="SortCode" />
+    </div>
+</div>

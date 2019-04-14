@@ -1,0 +1,166 @@
+﻿@model Billing.ViewModel.BankDepositViewModel
+
+@{
+    ViewBag.Title = "Bank Deposit";
+}
+<div class="row">
+    <div id="pnlBankDeposit" class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Bank Deposit
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BankNames, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("BankNames", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Select Bank", new { @class = "form-control", id = "BankNames", required = "required", @onchange = "return getBankAccounts()", @autofocus = "on" })
+                                @Html.ValidationMessageFor(model => model.BankNames, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="BankAccounts">
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2 no-pad-top">Method</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("TransactionMethod", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankDepositPaymentMethod)), "Payment Method", new { @class = "form-control", id = "TransactionMethod", required = "required" })
+                            </div>
+                        </div>
+                        <div id="BankDepositCheque" style="display: none;">
+                            @{Html.RenderPartial("Banks/BankDepositCheque");}
+                        </div>
+                        <div id="BankDepositCreditCard" style="display: none;">
+                            @{Html.RenderPartial("Banks/BankDepositCreditCard");}
+                        </div>
+                        <div class="LedgerPartial">
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="Ledgerhead">Head</label>
+                                <div class="col-md-10">
+                                    <select id="BankAccountLedgerHeadId" name="BankAccountLedgerHeadId" required class="form-control">
+                                        <option value="0">Ledger Head</option>
+                                        @foreach (var item in Model.BankAccountLedgerHeads)
+                                        {
+                                            <option value="@item.Id"> @item.LedgerHead </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="BankAccountLedgers_LedgerDate">Date</label>
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.LedgerDate, new { htmlAttributes = new { @class = "form-control input-xs calendar", placeholder = "YYYY-MM-DD", required = "required" } })
+                                    @Html.ValidationMessageFor(model => Model.LedgerDate, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => Model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => Model.Amount, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                                    @Html.ValidationMessageFor(model => Model.Amount, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="Remarks">Remarks</label>
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => Model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => Model.Notes, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 pull-right">
+                                <input type="submit" value="Save" class="btn btn-primary btn-sm" id="VoucherPostingSubmit" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div id="pnlBankBalance" class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Account Info
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                    <tbody id="AccountInfo">
+                        <tr>
+                            <td style="width: 25%;">A/C Name</td>
+                            <td id="acName"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 25%;">A/C No</td>
+                            <td id="acNo"></td>
+                        </tr>
+                    </tbody>
+                    <tbody id="balanceInfo">
+                        <tr>
+                            <td style="width: 25%;">Balance</td>
+                            <td id="balance"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function getBankAccounts()
+    {
+        var BankId = $("#BankNames").val();
+        $.get("/Banks/GetBankAccounts", { BankId: BankId }, function (res) {
+            $(".BankAccounts").html(res);
+        });
+    }
+    function BankBalance()
+    {
+        var BankAccountId = $("#BankAccountId").val();
+        $.get("/Banks/GetBankBalance", { AccountId: BankAccountId }, function (res) {
+            $("#acNo").html(res.AcNo);
+            $("#acName").html(res.AcName);
+            $("#balance").html(res.Balance);
+        });
+    }
+    function triggerCalendar()
+    {
+        $("#LedgerDate").datepicker({
+            dateFormat: "dd-mm-yy",
+            maxDate: "0",
+            prevText: "P",
+            nextText: "N",
+            showWeek: false,
+            changeMonth: true,
+            changeYear: true,
+            onClose: function (dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
+    }
+    $('#TransactionMethod').change(function () {
+        var TransactionMethod = $(this).val();
+        if (TransactionMethod == 1 || TransactionMethod == 5) {
+            $('#BankDepositCreditCard').css('display', 'none');
+            $("div#BankDepositCheque").css('display', 'none');
+        }
+        else if (TransactionMethod == 2) {
+            $('#BankDepositCreditCard').css('display', 'none');
+            $("div#BankDepositCheque").css('display', 'block');
+        }
+        else if (TransactionMethod == 3 || TransactionMethod == 4) {
+            $("div#BankDepositCheque").css('display', 'none');
+            $('#BankDepositCreditCard').css('display', 'block');
+        }
+    });
+</script>

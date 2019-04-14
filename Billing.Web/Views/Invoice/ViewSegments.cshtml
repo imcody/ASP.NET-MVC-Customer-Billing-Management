@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Billing.Entities.InvoiceSegment>
+<table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+    <tr>
+        <th>Airlines</th>
+        <th>Flight</th>
+        <th>Class</th>
+        <th>Date</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Dep</th>
+        <th>Arr</th>
+        <th>Status</th>
+        <th>Flight Date</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.AirlinesCode)</td>
+        <td>@Html.DisplayFor(modelItem => item.FlightNo)</td>
+        <td>@Html.DisplayFor(modelItem => item.SegmentClass)</td>
+        <td>@Html.DisplayFor(modelItem => item.Invoices.GdsBookingDate)</td>
+        <td>@Html.DisplayFor(modelItem => item.DepartureFrom)</td>
+        <td>@Html.DisplayFor(modelItem => item.DepartureTo)</td>
+        <td>@Html.DisplayFor(modelItem => item.DepartureTime)</td>
+        <td>@Html.DisplayFor(modelItem => item.ArrivalTime)</td>
+        <td>@Html.DisplayFor(modelItem => item.SegmentStatus)</td>
+        <td>@Html.DisplayFor(modelItem => item.SegmentSecondaryStatus)</td>
+    </tr>
+}
+
+</table>

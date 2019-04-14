@@ -1,0 +1,41 @@
+﻿@model Billing.Entities.OtherInvoiceType
+
+@{
+    ViewBag.Title = "Edit Invoice Type";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.Id)
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="InvoiceType">Invoice Type</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.InvoiceType, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                @Html.ValidationMessageFor(model => model.InvoiceType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Update" class="btn btn-primary btn-sm" />
+                                <a href="@Url.Action("InvoiceTypes", "OtherInvoice")" class="btn btn-default btn-sm">Back To List</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

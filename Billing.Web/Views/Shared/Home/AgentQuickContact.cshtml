@@ -1,0 +1,28 @@
+﻿<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 15%;">Agent</th>
+            <th style="text-align: left; width: 10%;">Telephone</th>
+            <th style="text-align: left; width: 10%;">Mobile</th>
+            <th style="text-align: left; width: 10%;">Fax</th>
+            <th style="text-align: left; width: 15%;">Address</th>
+            <th style="text-align: left; width: 15%;">Postcode</th>
+            <th style="text-align: left; width: 15%;">Email</th>
+            <th style="text-align: left; width: 10%;">Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DropDownList("AgentId", (IEnumerable<SelectListItem>)ViewBag.AgentList, "Select Agent", new { @class = "form-control", onchange = "Invoice.GetAgentQuickContact(this.value)" })
+            </td>
+            <td id="qATelephone"></td>
+            <td id="qAMobile"></td>
+            <td id="qAFaxNo"></td>
+            <td id="qAAddress"></td>
+            <td id="qAPostcode"></td>
+            <td id="qAEmail"></td>
+            <td id="qARemarks"></td>
+        </tr>
+    </tbody>
+</table>

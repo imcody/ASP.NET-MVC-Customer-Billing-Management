@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Billing.ViewModel.OtherInvoiceList>
+<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 5%;">INV.</th>
+            <th style="width: 15%;">Agent/Cust</th>
+            <th style="width: 15%;">Type</th>
+            <th style="width: 15%;">User</th>
+            <th style="text-align: center; width: 10%;">Date</th>
+            <th style="text-align: right; width: 12%;">Amount</th>
+            <th style="text-align: right; width: 12%;">Paid</th>
+            <th style="text-align: right; width: 11%;">Due</th>
+            <th style="text-align: center; width: 5%;">View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int k = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;">@item.InvoiceId</td>
+                    <td>@item.Agent</td>
+                    <td>@item.InvoiceType</td>
+                    <td>@item.User</td>
+                    <td style="text-align: center;">@item.CreatedOn</td>
+                    <td style="text-align: right;">@item.ACAmount.ToString("f2")</td>
+                    <td style="text-align: right;">@item.Paid.ToString("f2")</td>
+                    <td style="text-align: right;">@item.Due.ToString("f2")</td>
+                    <td style="text-align: center;">
+                        <a href="@Html.Raw(@Url.Action("Details", "OtherInvoice", new { @id = item.InvoiceId}))">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

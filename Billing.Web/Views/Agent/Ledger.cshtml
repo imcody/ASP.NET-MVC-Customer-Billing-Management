@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Billing.ViewModel.AgentLedgerViewModel>
+
+@{
+    ViewBag.Title = ViewBag.AgentName + " - Ledger Book";
+}
+<div class="row">
+    <div id="pnlLedgerFilters" class="col-md-12">
+        @{Html.RenderPartial("Agent/LedgerListFilter");}
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlLedgerList" class="col-md-12">
+        <div class="panel panel-default">
+            <div id="pnlHeading" class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div id="pnlAgentLedgerTable" class="panel-body">
+                @{Html.RenderPartial("Agent/AgentLedgerTable");}
+            </div>
+            <div id="pnlActionButtons" class="panel-body text-center">
+                @Html.ActionLink("Back to Agents", "Index", "Agent", null, new { @class = "btn btn-default btn-sm" })
+                <input type="hidden" value="@ViewBag.CurrentAgentId" name="CurrentAgentId" id="CurrentAgentId" />
+                <button class="btn btn-primary btn-sm" type="button">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function SearchByDateRange() {
+        var sDate = $('#FromDate').val();
+        var eDate = $('#ToDate').val();
+        var AgentId = parseInt($('#CurrentAgentId').val());
+        if (sDate !== "") {
+            $.get('/Agent/FilterAgentLedgerList', { searchType: 'SearchByDateRange', AgentId: AgentId, InvoiceId: 0, LedgerHead: 0, sDate: sDate, eDate: eDate }, function (res) {
+                $('div#pnlAgentLedgerTable').html(res);
+            });
+        }
+        else {
+            alert('Please provide at least starting date');
+            return false;
+        }
+    }
+    function SearchByDateRangeLedgerHead() {
+        debugger;
+        var sDate = $('#FromDate').val();
+        var eDate = $('#ToDate').val();
+        var AgentId = parseInt($('#CurrentAgentId').val());
+        var lHead = parseInt($('#LedgerHeadFilter').val());
+        if (sDate !== "" && lHead !== null) {
+            $.get('/Agent/FilterAgentLedgerList', { searchType: 'SearchByDateRangeLedgerHead', AgentId: AgentId, InvoiceId: 0, LedgerHead: lHead, sDate: sDate, eDate: eDate }, function (res) {
+                $('div#pnlAgentLedgerTable').html(res);
+            });
+        }
+        else {
+            alert('Please provide at least starting date');
+            return false;
+        }
+    }
+</script>

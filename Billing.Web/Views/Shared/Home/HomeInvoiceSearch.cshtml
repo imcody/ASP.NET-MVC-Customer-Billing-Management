@@ -1,0 +1,12 @@
+﻿<div class="col-md-3">
+    @Html.DropDownList("HomeUserList", (IEnumerable<SelectListItem>)ViewBag.UserList, "Select User", new { @class = "form-control", id = "HomeUserList" })
+</div>
+<div class="col-md-3">
+    <input type="text" class="form-control input-sm calendar" name="HomeFromDate" id="HomeFromDate" placeholder="From Date" autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+</div>
+<div class="col-md-3">
+    <input type="text" class="form-control input-sm calendar" name="HomeToDate" id="HomeToDate" placeholder="To Date" autocomplete="off" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+</div>
+<div class="col-md-3">
+    <button type="button" class="btn btn-primary btn-sm HomeInvoiceSearch">Search</button>
+</div>

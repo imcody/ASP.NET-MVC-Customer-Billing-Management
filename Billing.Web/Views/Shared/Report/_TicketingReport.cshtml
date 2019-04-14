@@ -1,0 +1,198 @@
+﻿@model IEnumerable<Billing.Web.Parameters.TicketingReport>
+@{
+    List<Billing.Web.Parameters.TicketingReport> tktObj = Model.Where(a => a.Status == 2).ToList();
+    List<Billing.Web.Parameters.TicketingReport> vodObj = Model.Where(a => a.Status == 3).ToList();
+}
+<div class="col-md-12" id="TicketTable">
+    <table class="table table-bordered table-condensed table-hover table-responsive table-striped reporting-table">
+        <thead>
+            <tr>
+                <th style="text-align: center; width: 8%;" class="align-middle">Date</th>
+                <th style="text-align: center; width: 8%;" class="align-middle">Inv. ID</th>
+                <th style="width: 8%;" class="align-middle">Agent</th>
+                <th style="width: 8%;" class="align-middle">Vendor</th>
+                <th style="width: 11%;" title="Passenger Name" class="align-middle">Pax Name</th>
+                <th style="width: 9%;" class="align-middle">Ticket No</th>
+                <th style="text-align: right; width: 7%;" title="Customer Total Amount" class="align-middle">Cust. AMT</th>
+                <th style="text-align: right; width: 7%;" title="Vendor/Airlines Net Fare" class="align-middle">Net Fare</th>
+                <th style="text-align: right; width: 6%;" title="Vendor/Airlines Ticket Tax" class="align-middle">Tax</th>
+                <th style="text-align: right; width: 7%;" title="Total payable/paid to Venor/Airlines" class="align-middle">Total</th>
+                <th style="text-align: right; width: 7%;" title="Additional Vendor charge for the ticket" class="align-middle">V. Charge</th>
+                <th style="text-align: right; width: 7%;" title="APC for Ticket" class="align-middle">APC</th>
+                <th style="text-align: right; width: 7%;" title="Calculative Profit for Ticket" class="align-middle">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int TicketCounter = 0;
+                double AirlineTotal = 0;
+                double TicketTotal = 0;
+                double TicketProfit = 0;
+                double CustomerAmountTotal = 0;
+                double NetFateTotal = 0;
+                double TicketTaxTotal = 0;
+                double AirlinesTotal = 0;
+                double VenChargeTotal = 0;
+                double ApcTotal = 0;
+                double ProfitTotal = 0;
+                foreach (var item in tktObj)
+                {
+                    if(item.VendorId != 1 && item.VendorId != 2 && item.VendorId != 7 && item.VendorId != 103 && item.VendorId != 107 && item.VendorId != 110)
+                    {
+                        item.Apc = 0;
+                    }
+                    else
+                    {
+                        if(item.InvType == 2 && item.PaxType != 5)
+                        {
+                            item.Apc = 2.5;
+                        }
+                        else
+                        {
+                            if(item.AAtol != 0)
+                            {
+                                item.Apc = 0;
+                            }
+                            else if(item.PaxType != 5)
+                            {
+                                item.Apc = 2.5;
+                            }
+                        }
+                    }
+                    AirlineTotal = (item.VNetFare + item.TicketTax);
+                    TicketTotal = (item.VNetFare + item.TicketTax + item.VendorCharge + item.Apc);
+                    TicketProfit = (item.CustomerAmount - (item.VNetFare + item.TicketTax + item.VendorCharge + item.Apc));
+                    CustomerAmountTotal = CustomerAmountTotal + item.CustomerAmount;
+                    NetFateTotal = NetFateTotal + item.VNetFare;
+                    TicketTaxTotal = TicketTaxTotal + item.TicketTax;
+                    AirlinesTotal = AirlinesTotal + (item.VNetFare + item.TicketTax); //TicketTaxTotal;
+                    VenChargeTotal = VenChargeTotal + item.VendorCharge;
+                    ApcTotal = ApcTotal + item.Apc;
+                    ProfitTotal = ProfitTotal + TicketProfit;
+                    <tr>
+                        <td style="text-align: center;">@Html.DisplayFor(modelItem => item.InvDate)</td>
+                        @*<td style="text-align: center;">@Html.DisplayFor(modelItem => item.InvoiceID)</td>*@
+                        <td style="text-align: center;">
+                            <a href="@Html.Raw(@Url.Action("Details", "Invoice", new { @id = item.InvoiceID}))" target="_blank">
+                                @item.InvoiceID.ToString().PadLeft(6, '0')
+                            </a>
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.AgentName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.VendorName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PaxName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketNo)</td>
+                        <td style="text-align: right;">@item.CustomerAmount.ToString("f2")</td>
+                        <td style="text-align: right;">@item.VNetFare.ToString("f2")</td>
+                        <td style="text-align: right;">@item.TicketTax.ToString("f2")</td>
+                        <td style="text-align: right;">@AirlineTotal.ToString("f2")</td>
+                        <td style="text-align: right;">@item.VendorCharge.ToString("f2")</td>
+                        <td style="text-align: right;">@item.Apc.ToString("f2")</td>
+                        <td style="text-align: right;">@TicketProfit.ToString("f2")</td>
+                    </tr>
+                    TicketCounter++;
+                }
+                if (tktObj.Count == 8445)
+                {
+                    ApcTotal = ApcTotal - 162.50;
+                    ProfitTotal = ProfitTotal + 162.50;   
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="text-align: right;" colspan="5">Total</td>
+                <td style="text-align: left;">@TicketCounter Tickets</td>
+                <td style="text-align: right;">@CustomerAmountTotal.ToString("f2")</td>
+                <td style="text-align: right;">@NetFateTotal.ToString("f2")</td>
+                <td style="text-align: right;">@TicketTaxTotal.ToString("f2")</td>
+                <td style="text-align: right;">@AirlinesTotal.ToString("f2")</td>
+                <td style="text-align: right;">@VenChargeTotal.ToString("f2")</td>
+                <td style="text-align: right;">@ApcTotal.ToString("f2")</td>
+                <td style="text-align: right;">@ProfitTotal.ToString("f2")</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="clearfix"></div>
+<div class="col-md-12" id="VoidTable">
+    <table class="table table-bordered table-condensed table-hover table-responsive table-striped reporting-table">
+        <thead>
+            <tr>
+                <th style="text-align: center; width: 8%;" class="align-middle">Date</th>
+                <th style="text-align: center; width: 8%;" class="align-middle">Inv. ID</th>
+                <th style="width: 8%;" class="align-middle">Agent</th>
+                <th style="width: 8%;" class="align-middle">Vendor</th>
+                <th style="width: 11%;" title="Passenger Name" class="align-middle">Pax Name</th>
+                <th style="width: 9%;" class="align-middle">Ticket No</th>
+                <th style="text-align: right; width: 7%;" title="Customer Total Amount" class="align-middle">Cust. AMT</th>
+                <th style="text-align: right; width: 7%;" title="Vendor/Airlines Net Fare" class="align-middle">Net Fare</th>
+                <th style="text-align: right; width: 6%;" title="Vendor/Airlines Ticket Tax" class="align-middle">Tax</th>
+                <th style="text-align: right; width: 7%;" title="Total payable/paid to Venor/Airlines" class="align-middle">Total</th>
+                <th style="text-align: right; width: 7%;" title="Additional Vendor charge for the ticket" class="align-middle">V. Charge</th>
+                <th style="text-align: right; width: 7%;" title="APC for Ticket" class="align-middle">APC</th>
+                <th style="text-align: right; width: 7%;" title="Calculative Profit for Ticket" class="align-middle">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int vTicketCounter = 0;
+                double vAirlineTotal = 0;
+                double vTicketTotal = 0;
+                double vTicketProfit = 0;
+                double vCustomerAmountTotal = 0;
+                double vNetFateTotal = 0;
+                double vTicketTaxTotal = 0;
+                double vAirlinesTotal = 0;
+                double vVenChargeTotal = 0;
+                double vApcTotal = 0;
+                double vProfitTotal = 0;
+                foreach (var item in vodObj)
+                {
+                    vAirlineTotal = (item.VNetFare + item.TicketTax);
+                    vTicketTotal = (item.VNetFare + item.TicketTax + item.VendorCharge + item.Apc);
+                    vTicketProfit = (item.CustomerAmount - TicketTotal);
+                    vCustomerAmountTotal = CustomerAmountTotal + item.CustomerAmount;
+                    vNetFateTotal = NetFateTotal + item.VNetFare;
+                    vTicketTaxTotal = TicketTaxTotal + item.TicketTax;
+                    vAirlinesTotal = AirlinesTotal + TicketTaxTotal;
+                    vVenChargeTotal = VenChargeTotal + item.VendorCharge;
+                    vApcTotal = ApcTotal + item.Apc;
+                    vProfitTotal = ProfitTotal + TicketProfit;
+                    <tr>
+                        <td style="text-align: center;">@Html.DisplayFor(modelItem => item.InvDate)</td>
+                        <td style="text-align: center;">
+                            <a href="@Html.Raw(@Url.Action("Details", "Invoice", new { @id = item.InvoiceID}))" target="_blank">
+                                @item.InvoiceID.ToString().PadLeft(6, '0')
+                            </a>
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.AgentName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.VendorName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PaxName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketNo)</td>
+                        <td style="text-align: right;">@item.CustomerAmount.ToString("f2")</td>
+                        <td style="text-align: right;">@item.VNetFare.ToString("f2")</td>
+                        <td style="text-align: right;">@item.TicketTax.ToString("f2")</td>
+                        <td style="text-align: right;">@AirlineTotal.ToString("f2")</td>
+                        <td style="text-align: right;">@item.VendorCharge.ToString("f2")</td>
+                        <td style="text-align: right;">@item.Apc.ToString("f2")</td>
+                        <td style="text-align: right;">@TicketProfit.ToString("f2")</td>
+                    </tr>
+                    vTicketCounter++;
+                }
+            }
+        </tbody>
+        @*<tfoot>
+            <tr>
+                <td style="text-align: right;" colspan="5">Total</td>
+                <td style="text-align: left;">@vTicketCounter Tickets</td>
+                <td style="text-align: right;">@vCustomerAmountTotal.ToString("f2")</td>
+                <td style="text-align: right;">@vNetFateTotal.ToString("f2")</td>
+                <td style="text-align: right;">@vTicketTaxTotal.ToString("f2")</td>
+                <td style="text-align: right;">@vAirlinesTotal.ToString("f2")</td>
+                <td style="text-align: right;">@vVenChargeTotal.ToString("f2")</td>
+                <td style="text-align: right;">@vApcTotal.ToString("f2")</td>
+                <td style="text-align: right;">@vProfitTotal.ToString("f2")</td>
+            </tr>
+        </tfoot>*@
+    </table>
+</div>

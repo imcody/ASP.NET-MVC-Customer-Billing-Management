@@ -1,0 +1,578 @@
+﻿@model Billing.ViewModel.InvoiceDetailsViewModel
+
+@{
+    ViewBag.Title = "Draft Details";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="section-body invoice-form">
+            <div class="col-md-12">
+                <div class="white-block">
+                    <div class="header-bar border">
+                        <h3 style="color: #000;">Draft Details</h3>
+                    </div>
+                    <div class="body-bar">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="leftside-filter">
+                                    @{Html.RenderPartial("Invoice/InvoiceInfo", Model);}
+                                    @{Html.RenderPartial("Invoice/PassengerList", Model);}
+                                    @{Html.RenderPartial("Invoice/SegmentList", Model);}
+                                    @{Html.RenderPartial("Invoice/RemarkList", Model);}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="fixedAction">
+            <div class="btn-group text-center" role="group" aria-label="Basic example">
+                <input type="hidden" name="InvoiceId" id="InvoiceId" value="@Model.InvoiceId" />
+                <input type="hidden" name="ProfileType" id="ProfileType" value="@Model.InvType" />
+                @Html.ActionLink("Fare Info", "updateFareInfo", "Invoice", new { id = Model.InvoiceId }, new { @class = "btn btn-primary btn-sm invFareInfo", title = "Update Ticket Pricing" })
+                <a href="javascript:;" class="btn btn-primary btn-sm updateAgent" title="Update Agent for this Draft">Update Agent</a>
+                <a href="javascript:;" class="btn btn-primary btn-sm updateVendor" title="Update Vendor for this Draft">Update Vendor</a>
+                <a href="javascript:;" class="btn btn-primary btn-sm updateInvoice" title="Update Invoice Basic Information">Update Invoice Info</a>
+                <a href="javascript:;" class="btn btn-primary btn-sm addRemarks" title="Add a remark to the invoice">Remarks</a>
+                @Html.ActionLink("Create Invoice", "CreateInvoice", "Invoice", new { id = Model.InvoiceId }, new { @class = "btn btn-primary btn-sm", title = "Create Invoice", onclick = "return confirm('Are you sure you want to create an invoice from this draft? This can not be un-done')" })
+                @Html.ActionLink("Void", "Delete", "Invoice", new { id = Model.InvoiceId }, new { @class = "btn btn-danger btn-sm", title = "Delete Invoice", onclick = "return confirm('Are you sure you want to delete this draft?')" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="agentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Agent</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                @using (Html.BeginForm("UpdateInvoice", "Invoice", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <div class="form-group" id="AgentList">
+                        <label class="control-label col-md-2">Agent</label>
+                        <div class="col-md-10">
+                            <select name="AgentId" id="AgentId" class="form-control">
+                                <option value="">Select Agent</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" name="InvoiceId" id="InvoiceId" value="@Model.InvoiceId" />
+                    <input type="hidden" name="trigger" value="ChangeAgent" />
+                    <button class="btn btn-success btn-block" type="submit">Update</button>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="loaderModal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="vendorModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Vendor</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                @using (Html.BeginForm("UpdateInvoice", "Invoice", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <div class="form-group" id="VendorList">
+                        <label class="control-label col-md-2">Vendor</label>
+                        <div class="col-md-10">
+                            <select name="VendorId" id="VendorId" class="form-control">
+                                <option value="">Select Vendor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" name="InvoiceId2" id="InvoiceId2" value="@Model.InvoiceId" />
+                    <input type="hidden" name="trigger" value="ChangeVendor" />
+                    <button class="btn btn-success btn-block" type="submit">Update</button>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="loaderModal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="invoiceModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Invoice Info</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                @using (Html.BeginForm("UpdateInvoice", "Invoice", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">PNR</label>
+                            <div class="col-md-8">
+                                <input type="text" name="PNRNo" id="PNRNo" value="" class="form-control input-sm" autocomplete="off" title="Invoice PNR No..." placeholder="PNR No..." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">V. INV</label>
+                            <div class="col-md-8">
+                                <input type="text" name="VendorInvNo" id="VendorInvNo" value="" class="form-control input-sm" autocomplete="off" title="Vendor Invoice No." placeholder="Vendor Invoice No." />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">EDP</label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <input type="text" name="ExpectedPaymentDate" class="form-control input-xs calendar" placeholder="YYYY-MM-DD" autocomplete="off" />
+                                <span class="input-group-addon trigger-calendar-from">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" title="Cancellation Charge">CANCEL. CHARGE.</label>
+                        <div class="col-md-5">
+                            <input type="text" name="CancellationChargeBefore" class="form-control input-xs" placeholder="BEFORE" autocomplete="off" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="CancellationChargeAfter" class="form-control input-xs" placeholder="AFTER" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" title="Cancellation Charge">CANCEL. DATE.</label>
+                        <div class="col-md-5">
+                            <input type="text" name="CancellationDateBefore" class="form-control input-xs" placeholder="BEFORE" autocomplete="off" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="CancellationDateAfter" class="form-control input-xs" placeholder="AFTER" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" title="Cancellation Charge">NO SHOW</label>
+                        <div class="col-md-5">
+                            <input type="text" name="NoShowBefore" class="form-control input-xs" placeholder="" autocomplete="off" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="NoShowAfter" class="form-control input-xs" placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <input type="hidden" name="InvoiceId3" id="InvoiceId3" value="@Model.InvoiceId" />
+                    <input type="hidden" name="trigger" value="ChangeInvoiceInfo" />
+                    <button class="btn btn-success btn-block" type="submit">Update</button>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="loaderModal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="venChargeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Vendor Charge For Invoice</h4>
+            </div>
+            <div class="modal-body" id="VendorCharges">
+            </div>
+            <div class="modal-footer">
+                <div class="loaderModal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="transactionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Agent</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                @using (Html.BeginForm("InvoiceTransaction", "Invoice", null, FormMethod.Post, new { @class = "", role = "form" }))
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default" id="TransactionInformation">
+                                <div class="panel-body form-horizontal">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 no-pad-top">Invoie No.</label>
+                                            <div class="col-md-8">
+                                                000075
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 no-pad-top">Total Amount.</label>
+                                            <div class="col-md-8">
+                                                1950.00
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 no-pad-top">Extra Charge.</label>
+                                            <div class="col-md-8">
+                                                20.00
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 no-pad-top">Amount Refunded.</label>
+                                            <div class="col-md-8">
+                                                0.00
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 no-pad-top">Amount Received.</label>
+                                            <div class="col-md-8">
+                                                20.00
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 no-pad-top">Amount Due.</label>
+                                            <div class="col-md-8">
+                                                0.00
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-body" id="PaymentConfiguration">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Amount Due.</label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" name="TransactionMode" id="TransactionMode">
+                                                <option value="">Please Select</option>
+                                                <option value="1">Amount Received</option>
+                                                <option value="2">Refund/Adjust</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Remarks.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="PaymentRemarks" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body" id="paymentMethod" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Method</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("TransactionMethod", EnumHelper.GetSelectList(typeof(Billing.ViewModel.PaymentMethod)), "Payment Method", new { @class = "form-control", id = "TransactionMethod", required = "required" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="PaymentAmount">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Amount.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="PaymentAmount" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body" id="ChequeDetails" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Bank</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("BankId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Select Bank", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="ChequeNo">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Cheque No.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="ChequeNo" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6" id="AccountNo">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Account No.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="AccountNo" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="SortCode">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Sort Code.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="SortCode" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body" id="CreditCardDetails" style="display: none;">
+                                <div class="col-md-6" id="CreditCardNo">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Credit Card No</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="Credit Card No" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="CardHolderName">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Card Holder Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="CardHolderName" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6" id="ExtraAmount">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Extra Amount.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="ExtraAmount" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="BankDate">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Bank Date</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="BankDate" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body" id="DebitCardDetails" style="display: none;">
+                                <div class="col-md-6" id="Debit CardNo">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Debit Card No</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="Debit  Card No" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="CardHolderName">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Card Holder Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="CardHolderName" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6" id="ExtraAmount">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Extra Amount.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="ExtraAmount" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="BankDate">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Bank Date</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="BankDate" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body" id="BankPayment" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Bank</label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" name="BankId" id="BankId">
+                                                <option value="">Please Select</option>
+                                                <option value="1">City Bank</option>
+                                                <option value="2">Brac Bank</option>
+                                                <option value="3">Dhaka Bank</option>
+                                                <option value="4">Islami Bank</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="BankDate">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Bank Date.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="Bank Date" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-6" id="CardHolderName">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Card Holder Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="CardHolderName" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="Purpose">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Purpose</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="Purpose" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body" id="InvoiceAdjust" style="display: none;">
+                                <div class="col-md-6" id="InvoiceNo">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 no-pad-top">Invoice No.</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control input-xs" name="InvoiceNo" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="InvoiceId" id="InvoiceId" value="@Model.InvoiceId" />
+                    <input type="hidden" name="trigger" value="ChangeAgent" />
+                    <button class="btn btn-success btn-block" type="submit">Update</button>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="loaderModal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="remarksModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Remarks</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                @using (Html.BeginForm("UpdateInvoice", "Invoice", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <div class="form-group" id="AgentList">
+                        <label class="control-label col-md-2">Remarks</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" name="InvoiceRemakrs" id="InvoiceRemakrs" required="required" autofocus="autofocus"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="InvoiceId" value="@Model.InvoiceId" />
+                    <input type="hidden" name="trigger" value="addRemarks" />
+                    <button class="btn btn-success btn-block" type="submit">Add Remarks</button>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="loaderModal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#TransactionMode').change(function () {
+        var TransactionMode = $(this).val();
+        if (TransactionMode == 1) {
+            $('#paymentMethod').css('display', 'block');
+        } else if (TransactionMode == 2) {
+            $('#paymentMethod').css('display', 'none');
+        }
+    });
+    $('#TransactionMethod').change(function () {
+        var TransactionMethod = $(this).val();
+        if (TransactionMethod == 1 || TransactionMethod == 7 || TransactionMethod == 8) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#InvoiceAdjust').css('display', 'none');
+        } else if (TransactionMethod == 2) {
+            $('#ChequeDetails').css('display', 'block');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#InvoiceAdjust').css('display', 'none');
+        } else if (TransactionMethod == 3) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'block');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#InvoiceAdjust').css('display', 'none');
+        } else if (TransactionMethod == 4) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'block');
+            $('#BankPayment').css('display', 'none');
+            $('#InvoiceAdjust').css('display', 'none');
+        } else if (TransactionMethod == 5) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'block');
+            $('#InvoiceAdjust').css('display', 'none');
+        } else if (TransactionMethod == 6) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#InvoiceAdjust').css('display', 'block');
+        }
+    });
+    $('.venCharge').click(function () {
+        $('#venChargeModal').modal();
+        $('#venChargeModal').find('.modal-footer .loaderModal').append('<div class="modalLoader" style="display:none"></div>')
+        var InvoiceId = parseInt($("#InvoiceId").val());
+        $.ajax({
+            url: '@Url.Action("VendorCharges", "Invoice")',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({ id: InvoiceId }),
+            beforeSend: function () {
+                $('body').find('.loader-container').show();
+            },
+            success: function (result) {
+                $('body').find('.loader-container').hide();
+                $("div#VendorCharges").html(result);
+            },
+            error: function (xhr, status, error) {
+                $('body').find('.loader-container').hide();
+                var err = eval("(" + xhr.responseText + ")");
+                $("div#VendorCharges").html(err.Message);
+            },
+        });
+    });
+</script>

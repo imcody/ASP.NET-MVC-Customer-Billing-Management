@@ -1,0 +1,47 @@
+﻿<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control input-xs calendar calendarFrom" placeholder="YYYY-MM-dd" id="FromDate" name="FromDate" title="For searching invoices of specific date, put only date in the From Date textbox.">
+                <span class="input-group-addon trigger-calendar-from">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control input-xs calendar calendarTo" placeholder="YYYY-MM-dd" id="ToDate" name="ToDate" title="For searching invoices of a date range, put date in both From Date and To Date textbox.">
+                <span class="input-group-addon trigger-calendar-from">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <input type="text" class="form-control input-sm" placeholder="INVOICE NO." id="InvoiceId" name="InvoiceId" title="While searching by Invoice ID, date range or other input values will not be considered." />
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <select class="form-control input-sm" name="SearchBy" id="SearchBy" title="While searching by values like last name, PNR, or Ticket No, date range or Invoice ID will not be considered.">
+                <option value="0">Search By</option>
+                <option value="1">Last Name</option>
+                <option value="2">Ticket No</option>
+                <option value="3">PNR</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <input type="text" class="form-control input-sm" name="SearchValue" id="SearchValue" placeholder="Search Value" />
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group pull-left">
+            <button type="button" class="btn btn-info InvoiceSearch">Search</button>
+        </div>
+    </div>
+</div>

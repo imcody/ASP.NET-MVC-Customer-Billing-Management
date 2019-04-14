@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Billing.ViewModel.AgentOutstandingInvoiceListViewModel>
+<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center;">Invoice ID</th>
+            <th style="text-align: center;">Date</th>
+            <th style="text-align: right;">Total</th>
+            <th style="text-align: right;">Paid</th>
+            <th style="text-align: right;">Due</th>
+            <th style="text-align: right;">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int k = 1; }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;">
+                    <input type="hidden" name="@String.Format("InvoiceId{0}", k)" id="@String.Format("InvoiceId{0}", k)" value="@item.InvoiceId" />
+                    <input type="hidden" name="@String.Format("Total{0}", k)" id="@String.Format("Total{0}", k)" value="@item.Total" />
+                    <input type="hidden" name="@String.Format("Paid{0}", k)" id="@String.Format("Paid{0}", k)" value="@item.Paid" />
+                    @item.InvoiceId.ToString().PadLeft(6, '0')
+                </td>
+                <td style="text-align: center;">@item.InvoiceDate</td>
+                <td style="text-align: right;">@item.Total.ToString("f2")</td>
+                <td style="text-align: right;">@item.Paid.ToString("f2")</td>
+                <td style="text-align: right;">@item.Due.ToString("f2")</td>
+                <td style="text-align: right;">
+                    <input type="text" name="@String.Format("PaidAmount{0}", k)" id="@String.Format("PaidAmount{0}", k)" class="form-control input-sm" autocomplete="off" value="0" style="text-align: right;" required="required" />
+                </td>
+            </tr>
+            k++;
+        }
+    </tbody>
+</table>
+<input type="hidden" name="InvoiceCount" id="InvoiceCount" value="@Model.Count()" />

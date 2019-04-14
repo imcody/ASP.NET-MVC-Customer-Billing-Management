@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewBag.Title = "Vendor Bulk Payment";
+}
+@using (Html.BeginForm("OtherInvPayment", "Vendor", null, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "OtherInvPayment" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Vendor Bulk Payment
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="PaymentBody">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vendor</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("VendorId", (SelectList)ViewBag.VendorList, "Select Vendor", new { @class = "form-control", id = "VendorId", onchange = "return GetVendorOutstandingOtherInvoices(this.value);", required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Method</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("PaymentMethod", EnumHelper.GetSelectList(typeof(Billing.ViewModel.PaymentMethod)), "Payment Method", new { @class = "form-control", id = "PaymentMethod", onchange = "return ConfigurePaymentForm(this.value);", required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Amount</label>
+                            <div class="col-md-10">
+                                <input type="text" name="Amount" id="Amount" class="form-control input-sm" placeholder="Paid Amount" title="Amount Paid" required="required" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Remarks</label>
+                            <div class="col-md-10">
+                                <input type="text" name="Notes" id="Notes" class="form-control input-sm" placeholder="Remarks" title="Remarks" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Date</label>
+                            <div class="col-md-10">
+                                <input type="text" name="LedgerDate" id="LedgerDate" class="form-control input-sm calendar" placeholder="Payment Date" title="Payment Date" required="required" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ChequeDetails" style="display: none;">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Bank</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("chkBankId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Select Bank", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Cheque No.</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="chkChequeNo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Account No.</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="chkAccountNo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Sort Code.</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="chkSortCode" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="CreditCardDetails" style="display: none;">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Deposit To</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("BankId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Deposit To", new { @class = "form-control BankId", onchange = "return getBankAccountsCC(this.value);" })
+                            </div>
+                        </div>
+                        <div class="BankAccountListCC">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Card No</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="CreditCardNo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Card Holder</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="CardHolderName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Extra Amount.</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="ExtraAmount" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Bank Date</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="BankDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="DebitCardDetails" style="display: none;">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Deposit To</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("BankId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Deposit To", new { @class = "form-control BankId", onchange = "return getBankAccountsDC(this.value);" })
+                            </div>
+                        </div>
+                        <div class="BankAccountListDC">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Card No</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="CreditCardNo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Card Holder</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="CardHolderName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Extra Amount.</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="ExtraAmount" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Bank Date</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="BankDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="BankPayment" style="display: none;">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Deposit To</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("BankId", EnumHelper.GetSelectList(typeof(Billing.ViewModel.BankName)), "Deposit To", new { @class = "form-control BankId", onchange = "return getBankAccountsBP(this.value);" })
+                            </div>
+                        </div>
+                        <div class="BankAccountListBP">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Bank Date.</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control input-xs" name="BankDateBankDeposit" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="VendorOutstandingOtherInvoiceList">
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Update Payment" class="btn btn-primary btn-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function GetVendorOutstandingOtherInvoices(vendorid) {
+        $.get("/Vendor/GetVendorOutstandingOtherInvoice", { VendorId: vendorid }, function (res) {
+            $("#VendorOutstandingOtherInvoiceList").html(res);
+        });
+    }
+    function ConfigurePaymentForm(method) {
+        var PaymentMethod = parseInt(method);
+        if (PaymentMethod == 1) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#AgentOutstandingInvoiceList').css('display', 'block');
+        } else if (PaymentMethod == 2) {
+            $('#ChequeDetails').css('display', 'block');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#AgentOutstandingInvoiceList').css('display', 'none');
+        } else if (PaymentMethod == 3) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'block');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'none');
+            $('#AgentOutstandingInvoiceList').css('display', 'block');
+        } else if (PaymentMethod == 4) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'block');
+            $('#BankPayment').css('display', 'none');
+            $('#AgentOutstandingInvoiceList').css('display', 'block');
+        } else if (PaymentMethod == 5) {
+            $('#ChequeDetails').css('display', 'none');
+            $('#CreditCardDetails').css('display', 'none');
+            $('#DebitCardDetails').css('display', 'none');
+            $('#BankPayment').css('display', 'block');
+            $('#AgentOutstandingInvoiceList').css('display', 'block');
+        }
+
+    }
+    function getBankAccountsCC(BankId) {
+        $.get("/Vendor/GetBankAccountsCC", { BankId: BankId }, function (res) {
+            $(".BankAccountListCC").html(res);
+        });
+    }
+    function getBankAccountsDC(BankId) {
+        $.get("/Vendor/GetBankAccountsDC", { BankId: BankId }, function (res) {
+            $(".BankAccountListDC").html(res);
+        });
+    }
+    function getBankAccountsBP(BankId) {
+        $.get("/Vendor/GetBankAccountsBP", { BankId: BankId }, function (res) {
+            $(".BankAccountListBP").html(res);
+        });
+    }
+</script>

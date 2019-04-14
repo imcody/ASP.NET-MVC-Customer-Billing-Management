@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/assets/img/fc_icon.ico" type="image/x-icon" sizes="16x16"> 
+    <title>@ViewBag.Title - Flight Concept Ltd.</title>
+    <link href="~/assets/fonts/simple-line-icons/simple-line-icons.css" rel="stylesheet" />
+    <link href="~/assets/fonts/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/assets/global/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link href="~/assets/global/jquery-ui/jquery-ui.css" rel="stylesheet" />
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+    <link href="~/assets/css/animate.css" rel="stylesheet" />
+    <link href="~/assets/css/common.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/assets/global/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+</head>
+@using Vereyon.Web;
+<body>
+    <!--Ajax Loader-->
+    <div class="loader-container" style="display:none">
+        <div class="loader"></div>
+    </div>
+    <!--End of Ajax Loader-->
+    
+    <!--Container for Main navigational menu-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/Home/Index">
+                    <img src="~/assets/img/logo.jpg" />
+                </a>
+            </div>
+            @using Microsoft.AspNet.Identity
+            @if (Request.IsAuthenticated)
+            {
+                <!--Main navigational menu-->
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">@Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { id = "Home" })</li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "Banks" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Banks
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Account List", "Index", "Banks", routeValues: null, htmlAttributes: new { id = "BankAccountList" })</li>
+                                <li>@Html.ActionLink("Add Account", "AddBank", "Banks", routeValues: null, htmlAttributes: new { id = "AddBankAccount" })</li>
+                                <li>@Html.ActionLink("Ledger Head", "LedgerHead", "Banks", routeValues: null, htmlAttributes: new { id = "BankLedgreHead" })</li>
+                                <li>@Html.ActionLink("Bank Deposit", "BankDeposit", "Banks", routeValues: null, htmlAttributes: new { id = "BankDeposit" })</li>
+                                <li>@Html.ActionLink("Bank Withdrawal", "BankWithdrawal", "Banks", routeValues: null, htmlAttributes: new { id = "BankWithdrawal" })</li>
+                                <li>@Html.ActionLink("Petty Cash Withdrawal", "PettyCashWithdrawal", "Banks", routeValues: null, htmlAttributes: new { id = "PettyCashWithdrawal" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "Vendor" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Vendor
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Add New Vendor", "Create", "Vendor", routeValues: null, htmlAttributes: new { id = "AddVendors" })</li>
+                                <li>@Html.ActionLink("View Vendor List", "Index", "Vendor", routeValues: null, htmlAttributes: new { id = "VendorsList" })</li>
+                                <li>@Html.ActionLink("Ticketing Invoice Payment", "BulkPayment", "Vendor", routeValues: null, htmlAttributes: new { id = "BulkPayment" })</li>
+                                <li>@Html.ActionLink("Other Invoice Payment", "OtherInvPayment", "Vendor", routeValues: null, htmlAttributes: new { id = "OtherInvPayment" })</li>
+                                <li>@Html.ActionLink("Invoice Payment History", "InvoicePayment", "Vendor", routeValues: null, htmlAttributes: new { id = "InvoicePayment" })</li>
+                                <li>@Html.ActionLink("Outstanding Ticketing Inv", "VendorOutstanding", "Vendor", routeValues: null, htmlAttributes: new { id = "VendorOutstanding" })</li>
+                                <li>@Html.ActionLink("Outstanding Other Inv", "OutstandingOtherInvoice", "Vendor", routeValues: null, htmlAttributes: new { id = "VendorOutstandingOtherInvoice" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "Agent" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Agent
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Add New Agent", "Create", "Agent", routeValues: null, htmlAttributes: new { id = "AddAgents" })</li>
+                                <li>@Html.ActionLink("View Agent List", "Index", "Agent", routeValues: null, htmlAttributes: new { id = "AgentsList" })</li>
+                                <li>@Html.ActionLink("Ticketing Invoice Payment", "BulkPayment", "Agent", routeValues: null, htmlAttributes: new { id = "BulkPayment" })</li>
+                                <li>@Html.ActionLink("Other Invoice Payment", "InvoicePayment", "Agent", routeValues: null, htmlAttributes: new { id = "InvoicePayment" })</li>
+                                <li>@Html.ActionLink("Outstanding Ticketing Inv", "AgentOutstanding", "Agent", routeValues: null, htmlAttributes: new { id = "AgentOutstanding" })</li>
+                                <li>@Html.ActionLink("Outstanding Other Inv", "OutstandingOtherInvoice", "Agent", routeValues: null, htmlAttributes: new { id = "OutstandingOtherInvoice" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "Invoice" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Invoice
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li><a href="javascript:;" class="createInvoice">Create Invoice</a></li>
+                                <li>@Html.ActionLink("Invoice List", "Index", "Invoice", routeValues: null, htmlAttributes: new { id = "InvoiceList" })</li>
+                                <li>@Html.ActionLink("Draft List", "DraftList", "Invoice", routeValues: null, htmlAttributes: new { id = "InvoiceList" })</li>
+                                <li>@Html.ActionLink("Invoice Search", "InvoiceSearch", "Invoice", routeValues: null, htmlAttributes: new { id = "InvoiceSearch" })</li>
+                                <li>@Html.ActionLink("Flight Search", "FlightSearch", "Invoice", routeValues: null, htmlAttributes: new { id = "FlightSearch" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "OtherInvoice" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Other Invoice
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Invoice Type", "InvoiceTypes", "OtherInvoice", routeValues: null, htmlAttributes: new { id = "OtherInvoice" })</li>
+                                <li>@Html.ActionLink("Create Invoice", "CreateInvoice", "OtherInvoice", routeValues: null, htmlAttributes: new { id = "CreateInvoice" })</li>
+                                <li>@Html.ActionLink("Other Inv List", "Index", "OtherInvoice", routeValues: null, htmlAttributes: new { id = "OtherInvList" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "Accounting" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Accounts
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Cash In Hand", "CashInHand", "Accounting", routeValues: null, htmlAttributes: new { id = "CashInHand" })</li>
+                                <li>@Html.ActionLink("Accounts Head", "LedgerHead", "Accounting", routeValues: null, htmlAttributes: new { id = "LedgerHead" })</li>
+                                <li>@Html.ActionLink("General Voucher", "Ledger", "Accounting", routeValues: null, htmlAttributes: new { id = "LedgerPost" })</li>
+                                <li>@Html.ActionLink("Income Statement", "LedgerList", "Accounting", new { type = "Income" }, null)</li> <!--For passing parameter to Controller/action by get-->
+                                <li>@Html.ActionLink("Expense Statement", "LedgerList", "Accounting", new { type = "Expense" }, null)</li> <!--For passing parameter to Controller/action by get-->
+                                <li>@Html.ActionLink("Floating Cheque", "FloatingCheque", "Accounting", routeValues: null, htmlAttributes: new { id = "FloatingCheque" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "Report" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Reports
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Ticket Report", "TicketReport", "Report", routeValues: null, htmlAttributes: new { id = "TicketReport" })</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @(ViewContext.RouteData.Values["Controller"].ToString() == "System" ? "active" : "")">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                System
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu right">
+                                <li>@Html.ActionLink("Airlines", "Index", "Airlines", routeValues: null, htmlAttributes: new { id = "AirlinesList" })</li>
+                                <li>@Html.ActionLink("Airport Codes", "Index", "AirportCodes", routeValues: null, htmlAttributes: new { id = "AirportCodeList" })</li>
+                                <li>@Html.ActionLink("User List", "Index", "Account", routeValues: null, htmlAttributes: new { id = "User List" })</li>
+                                <li>@Html.ActionLink("Company Information", "Index", "CompanyInfo", routeValues: null, htmlAttributes: new { id = "AirportCodeList" })</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+                <!--End of main navigational menu-->
+            }
+        </div>
+    </nav>
+    <!--End of Container for Main navigational menu-->
+
+    <div class="data-content">
+        <div class="container-fluid body-content">
+            <div class="notify-top"></div>
+            <!--Create Invoice Modal-->
+            <div id="gdsModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Invoice Info</h4>
+                        </div>
+                        <div class="modal-body" id="modal-body">
+                            @using (Html.BeginForm("Confirm", "Invoice", null, FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "invoiceForm" }))
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">GDS</label>
+                                    <div class="col-md-10">
+                                        <select name="GDSs" id="GDSs" required="required" class="form-control">
+                                            <option value="">Select GDS</option>
+                                            <option value="1">Amadeus</option>
+                                            <option value="2">Galileo</option>
+                                            <option value="3">Sabre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">GDS Data</label>
+                                    <div class="col-md-10">
+                                        <textarea name="bookin" class="form-control" rows="10"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="VendorList">
+                                    <label class="control-label col-md-2">Vendor</label>
+                                    <div class="col-md-10">
+                                        <select name="VendorId" id="VendorId" required="required" class="form-control">
+                                            <option value="">Select Vendor</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Type</label>
+                                    <div class="col-md-10">
+                                        <select name="ProfileType" id="ProfileType" required="required" class="form-control AgentType">
+                                            <option value="">Invoice Type</option>
+                                            <option value="1">Agent</option>
+                                            <option value="2">Customer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="AgentList" style="display: none;">
+                                    <label class="control-label col-md-2">Agent</label>
+                                    <div class="col-md-10">
+                                        <select name="AgentId" id="AgentId" class="form-control">
+                                            <option value="">Select Agent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="CustomerType" style="display: none;">
+                                    <label class="control-label col-md-2">Cust. Type</label>
+                                    <div class="col-md-10">
+                                        <select name="CusType" id="CusType" class="form-control">
+                                            <option value="">Customer Type</option>
+                                            <option value="1">New</option>
+                                            <option value="2">Existing</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="NewCustomerSection" style="display: none;">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Name</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" placeholder="Customer Name" name="Name" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Mobile</label>
+                                        <div class="col-md-10">
+                                            <input type="tel" class="form-control" placeholder="Mobile No." name="Mobile" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Email</label>
+                                        <div class="col-md-10">
+                                            <input type="email" class="form-control" placeholder="Email Address" name="Email" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Postcode</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" placeholder="Postcode. i.e. E1 1DT" name="Postcode" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="CustomerList" style="display: none;">
+                                    <label class="control-label col-md-2">Customer</label>
+                                    <div class="col-md-10">
+                                        <select name="AgentId2" id="AgentId2" class="form-control">
+                                            <option value="">Select Customer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success btn-block" type="submit">Create</button>
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <div class="loaderModal"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End of Create Invoice Modal-->
+            @Html.RenderFlashMessages()
+            @RenderBody()
+            <hr />
+            <footer>
+                @*<p>&copy; @DateTime.Now.Year - Flight Concept Ltd.</p>*@
+            </footer>
+        </div>
+    </div>
+        
+    <script src="~/assets/global/bootstrap/js/bootstrap.js"></script>
+    <script src="~/assets/global/jquery-ui/jquery-ui-1.10.3.custom.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/assets/js/script.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Invoice.init();
+            Invoice.ActiveFocus();
+        });
+    </script>
+</body>
+</html>

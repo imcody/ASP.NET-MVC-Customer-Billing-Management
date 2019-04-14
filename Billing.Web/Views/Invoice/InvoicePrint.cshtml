@@ -1,0 +1,209 @@
+﻿@model Billing.ViewModel.InvoicePrintViewModel
+@{
+    ViewBag.Title = "Invoice Print";
+    Layout = "~/Views/Shared/_LayoutPrint.cshtml";
+}
+
+<div class="invoice-container">
+    <div class="invoicePrint">
+        <div class="printHead">
+            @*<img src="~/assets/img/topbanner.gif">*@
+            <img src="~/assets/img/topbanner.jpg">
+        </div>
+        <div class="printbody">
+            <div class="source-address">
+                <small>Booked at: FC Travel Ltd, @Model.CompInfo.Address, Tel: @Model.CompInfo.Telephone, Fax: @Model.CompInfo.FaxNo</small>
+            </div>
+            <div class="address-bar">
+                <p>FC Travel Ltd, @Model.CompInfo.Address </p>
+                <p>Tel: @Model.CompInfo.Telephone, Fax: @Model.CompInfo.FaxNo</p>
+                <p>Email: @Model.CompInfo.Email</p>
+                <h3>Invoice</h3>
+            </div>
+            <div class="invoice-details">
+                <div class="leftInfo">
+                    <p><b>Invoice to : </b>@Model.InvDetails.AgentName</p>
+                    <p><b>Address :</b>@Model.InvDetails.AgentAddress</p>
+                    <p><b>Tel No : </b>@Model.InvDetails.AgentTelephone</p>
+                    <p><b>Sales Status : </b>Retail Seat Sale</p>
+                </div>
+                <div class="rightInfo">
+                    <p><b>Invoice Number : </b>@Model.InvDetails.InvoiceId</p>
+                    <p><b>Date  :</b> @Model.InvDetails.SysCreateDate</p>
+                    <p><b>Airlines : </b>@Model.InvDetails.AirlinesName</p>
+                    <p><b>Consultant :  </b>@Model.InvDetails.PersonName</p>
+                    <p><b>GDS Booking Date :</b>@Model.InvDetails.GdsBookingDate</p>
+                    <p><b>PNR :</b>@Model.InvDetails.Pnr</p>
+                </div>
+            </div>
+            <div class="flightinfo">
+                <table class="table table-bordered padd3">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Airlines</th>
+                            <th style="text-align: center;">Flight</th>
+                            <th style="text-align: center;">Class</th>
+                            <th style="text-align: center;">Date</th>
+                            <th style="text-align: center;">From</th>
+                            <th style="text-align: center;">To</th>
+                            <th style="text-align: center;">Dep</th>
+                            <th style="text-align: center;">Arr</th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Flight Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (Billing.ViewModel.InvoiceDetailsSegmentViewModel segment in Model.InvDetails.invSegments)
+                            {
+                                <tr>
+                                    <td style="text-align: center;">@segment.AirlinesCode</td>
+                                    <td style="text-align: center;">@segment.FlightNo</td>
+                                    <td style="text-align: center;">@segment.SegmentClass</td>
+                                    <td style="text-align: center;">@segment.DepartureDate</td>
+                                    <td style="text-align: center;">@segment.DepartureFrom</td>
+                                    <td style="text-align: center;">@segment.DepartureTo</td>
+                                    <td style="text-align: center;">@segment.DepartureTime</td>
+                                    <td style="text-align: center;">@segment.ArrivalTime</td>
+                                    <td style="text-align: center;">@segment.SegmentStatus</td>
+                                    <td style="text-align: center;">@segment.FlightDate</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered padd3">
+                    <tr>
+                        <th style="text-align: center; width: 5%;">SL.</th>
+                        <th style="text-align: center; width: 5%;">Type</th>
+                        <th style="text-align: left; width: 45%;">NAME</th>
+                        <th style="text-align: center; width: 15%;">Ticket No</th>
+                        <th style="text-align: right; width: 10%;">Fare</th>
+                        <th style="text-align: right; width: 10%;">Tax </th>
+                        <th style="text-align: right; width: 10%;">Amount</th>
+                    </tr>
+                    @{
+                        int k = 1; double total = 0; double paidTotal = 0;
+                        foreach (Billing.ViewModel.InvoiceDetailsPaxViewModel pax in Model.InvDetails.PaxList)
+                        {
+
+                            total = Convert.ToDouble(total + pax.Amount);
+                            <tr>
+                                <td style="text-align: center;">@k</td>
+                                <td style="text-align: center;">@pax.PaxType</td>
+                                <td style="text-align: left;">@pax.Name</td>
+                                <td style="text-align: center;">@pax.TicketNo</td>
+                                <td style="text-align: right;">@pax.Fare.ToString("f2")</td>
+                                <td style="text-align: right;">@pax.Tax.ToString("f2")</td>
+                                <td style="text-align: right;">@pax.Amount.ToString("f2")</td>
+                            </tr>
+                            k++;
+                        }
+                        Model.Total = total;
+                        foreach (Billing.ViewModel.InvoicePaymentHistory pax in Model.InvDetails.invPaid)
+                        {
+                            paidTotal = paidTotal + pax.Amount;    
+                        }
+                    }
+                    <tr>
+                        <th colspan="3">
+                            For payment Only
+                        </th>
+                        <th colspan="3" style="text-align: right;">
+                            Total
+                        </th>
+                        <th style="text-align: right;">@Model.Total.ToString("f2")</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <p><b>Account Name :</b> FC Travel Ltd </p>
+                        </td>
+                        <td colspan="3" style="text-align: right;">
+                            Amount Received 
+                        </td>
+                        <td style="text-align: right;">
+                            @paidTotal.ToString("f2")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <p><b>Account Number :</b> 733 18 079 </p>
+                            <p><b>Sort Code : </b>20-35-90</p>
+                            <p><b>Bank : </b>Barclays Bank</p>
+                        </td>
+                        <td colspan="3" style="text-align: right;">
+                            Amount Due
+                        </td>
+                        <td style="text-align: right;">
+                            @((Model.Total - paidTotal).ToString("f2"))
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            @*<div class="paymentInfo">
+                <div class="paymentLeft">
+                    <table class="table table-bordered padd3">
+                        <tr>
+                            <th>
+                                For payment Only
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><b>Account Name :</b> Minarat Travel & Tours </p>
+                                <p><b>Account Number :</b> 832 060 25 </p>
+                                <p><b>Sort Code : </b>20-35-90</p>
+                                <p><b>Bank : </b>Barclays Bank</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="paymentRight">
+                    <table class="table table-bordered custompadd padd2">
+                        <tr>
+                            <td>Total :</td>
+                            <td>£465.00</td>
+                        </tr>
+                        <tr>
+                            <td>Extra Charge :</td>
+                            <td>£0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Grand Total :</td>
+                            <td>£465.00</td>
+                        </tr>
+                        <tr>
+                            <td>Amount Received :</td>
+                            <td>£200.00</td>
+                        </tr>
+                        <tr>
+                            <td>Any Refund :</td>
+                            <td>£0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Balance Due :</td>
+                            <td>£265.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>*@
+            <div class="informationblock">
+                <p style="text-align: justify; font-size: 9px;">Your Financial Protection When you buy an ATOL protected flight or flight inclusive holiday from us you will receive an ATOL Certificate.This lists what is financially protected, where you can get information on what this means for you and who to contact if things go wrong.</p>
+                <p style="text-align: justify; font-size: 9px;">General Conditions of sales: (1) Fares are subject to Change / withdrawal at any time without prior notice. (2) Once ticket issued, change or cancellation/refund may be denied or subject to penalty. (3) Refund if allowed, may take minimum 8-12 weeks. Please check if your ticket is changeable/non changeable, refundable/non refundable before issue. (4) Please check validity of your travel documents/Passport. You may need a VISA to your destination or at your transit point. It's entirely the passenger’s responsibility to ensure they hold valid passport and valid visa to their point of destination or their transit point before ticket issuance.  (5) Returning passengers must re confirm their seats 72 hours before departure, non compliance will result in cancellation of seats by the airlines? (6) Ticket dispatched by post is passengers / agents own risk. (7) Minarat Travel & Tours Ltd will not be responsible for any expenses incurred by the passengers due to flight delay. (8) Minarat Travel & Tours Ltd does not operate travel insurance policy.</p>
+                <p style="text-align: justify; font-size: 9px;">
+                    For any queries, please contact us and please check in 3 hours before departure, Please check validity of your passport and any relevant VISA.
+                    <br />
+                    Thank you for booking with FC Travel Ltd
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('document').ready(function () {
+        $(window).load(function () {
+            window.print();
+        });
+    });
+</script>
+

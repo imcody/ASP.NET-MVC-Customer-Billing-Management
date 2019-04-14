@@ -1,0 +1,33 @@
+﻿<div class="filter-section">
+    <div class="filter-head">
+        <a href="javascript:;" class="sidebar-collapse">
+            Invoice Log
+        </a>
+    </div>
+    <div class="filter-body">
+        <table class="table table-sm text-right table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">Date</th>
+                    <th style="text-align: center;">Time</th>
+                    <th style="text-align: left;">User</th>
+                    <th style="text-align: left;">Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (Billing.ViewModel.InvoiceDetailsLogViewModel Logs in Model.invLog)
+                    {
+                        <tr>
+                            <td style="text-align: center;">@Logs.Date</td>
+                            <td style="text-align: center;">@Logs.Time</td>
+                            <td style="text-align: left;">@Logs.UserID</td>
+                            <td style="text-align: left;">@Logs.Remarks</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

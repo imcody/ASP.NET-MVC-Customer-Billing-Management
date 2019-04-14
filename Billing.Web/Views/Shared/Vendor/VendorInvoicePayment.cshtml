@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoicePaymentHistoryVendor>
+<table class="table table-bordered table-condensed table-hover table-responsive">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 8%;">Invoice</th>
+            <th style="text-align: center; width: 10%;">Payment Date</th>
+            <th style="text-align: left; width: 25%;">Vendor</th>
+            <th style="text-align: center; width: 14%;">User</th>
+            <th style="text-align: left; width: 20%;">Notes</th>
+            <th style="text-align: left; width: 8%;">Method</th>
+            <th style="text-align: right; width: 15%;">Paid</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ double Total = 0;
+            foreach (var item in Model)
+            {
+                Total = Total + item.Amount;
+                <tr>
+                    <td style="text-align: center;">
+                        <a href="@Html.Raw(@Url.Action("Details", "Invoice", new { @id = item.InvoiceId }))">
+                            @item.InvoiceId.ToString().PadLeft(6, '0')
+                        </a>
+                    </td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.VendorName)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(modelItem => item.UserName)</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.Notes)</td>
+                    <td style="text-align: left;">@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                    <td style="text-align: right;">@item.Amount.ToString("f2")</td>
+                </tr>
+            }
+        }
+        <tr>
+            <th colspan="6" style="text-align: right;">Total</th>
+            <th style="text-align: right;">@Total.ToString("f2")</th>
+        </tr>
+    </tbody>
+</table>
+

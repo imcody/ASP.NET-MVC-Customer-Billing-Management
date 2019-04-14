@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Billing.ViewModel.UpdateFareInfo>
+
+@{
+    ViewBag.Title = "Update Fare Info";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Update Fare Info
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                @Html.AntiForgeryToken()
+                <table class="table table-bordered table-condensed table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 10%;">Type</th>
+                            <th style="width: 17%;">Name</th>
+                            <th class="text-center" style="width: 10%;">Ticket</th>
+                            <th class="text-right" style="width: 9%;">Amount</th>
+                            <th class="text-right" style="width: 9%;">Tax</th>
+                            <th class="text-right" style="width: 9%;">APC</th>
+                            <th class="text-right" style="width: 9%;">C. Net Fare</th>
+                            <th class="text-right" style="width: 9%;">V. Net Fare</th>
+                            <th class="text-right" style="width: 9%;">V. Charge</th>
+                            <th class="text-right" style="width: 9%;">Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @{ int k = 1;
+                    foreach (Billing.ViewModel.UpdateFareInfo Names in Model)
+                    {
+                        int selected = (int)Names.PassengerTypes;
+                        <tr>
+                            <td>
+                                @Html.DropDownList(String.Format("PassengerTypes{0}", k), EnumHelper.GetSelectList(typeof(Billing.ViewModel.PassengerType)), "Pax Type", new { @class = "form-control" })
+                                <script>
+                                    var index = '@k';
+                                    var value = '@selected';
+                                    $('#PassengerTypes' + index).val($('#PassengerTypes' + index + ' option:eq('+ value +')').val());
+                                </script>
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("Name{0}", k)" value="@(Names.Name)" class="form-control input-xs inv-finame" title="@(Names.Name)" autocomplete="off" />
+                                <input type="hidden" name="@String.Format("Id{0}", k)" value="@(Names.Id)" />
+                                <input type="hidden" name="@String.Format("InvoiceId{0}", k)" value="@(Names.InvoiceId)" />
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="text" name="@String.Format("TicketNo{0}", k)" id="@String.Format("TicketNo{0}", k)" value="@(Names.TicketNo)" class="form-control input-xs text-center inv-fiticket" title="Ticket Number" autocomplete="off" />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("Amount{0}", k)" id="@String.Format("Amount{0}", k)" value="@(Names.Amount.ToString("f2"))" class="form-control input-xs text-right inv-fiamount" title="Customer Total Amount" autocomplete="off" />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("Tax{0}", k)" id="@String.Format("Tax{0}", k)" value="@(Names.Tax.ToString("f2"))" class="form-control input-xs text-right inv-fitax" title="Customer Tax" autocomplete="off" />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("Apc{0}", k)" id="@String.Format("Apc{0}", k)" value="@(Names.Apc.ToString("f2"))" class="form-control input-xs text-right inv-fiapc" title="APC" onfocus="this.blur();"  />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("CNetFare{0}", k)" id="@String.Format("CNetFare{0}", k)" value="@(Names.CNetFare.ToString("f2"))" class="form-control input-xs text-right inv-cnetfare" title="Customer Net Fare" onfocus="this.blur();" />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("VNetFare{0}", k)" id="@String.Format("VNetFare{0}", k)" value="@(Names.VNetFare.ToString("f2"))" class="form-control input-xs text-right inv-vnetfare" title="Vendor Net Fare" autocomplete="off" />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("VendorCharge{0}", k)" id="@String.Format("VendorCharge{0}", k)" value="@(Names.VendorCharge.ToString("f2"))" class="form-control input-xs text-right inv-vcharge" title="Vendor Charge" autocomplete="off" />
+                            </td>
+                            <td>
+                                <input type="text" name="@String.Format("Profit{0}", k)" id="@String.Format("Profit{0}", k)" value="@(Names.Profit.ToString("f2"))" class="form-control input-xs text-right inv-profit" title="Ticket Profit" onfocus="this.blur();" />
+                            </td>
+                        </tr>
+                            k++;
+                        }}
+                    </tbody>
+                </table>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" name="InvoiceId" value="@ViewBag.InvoiceId" />
+                        <input type="hidden" name="RowCount" value="@Model.Count()" />
+                        <input type="button" value="Fill All" class="btn btn-primary  btn-sm" title="Put same value for all tickets" onclick="Invoice.FillUpTicketPrice()" />
+                        <input type="submit" value="Update" class="btn btn-primary  btn-sm" />
+                        @Html.ActionLink("Back to Details", "Details", "Invoice", new { id = ViewBag.InvoiceID }, new { @class = "btn btn-default btn-sm" })
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$('document').ready(function(){
+	    Invoice.init();
+	});
+</script>

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Billing.ViewModel.FloatChequeViewModel>
+
+@{
+    ViewBag.Title = "Floating Cheque";
+}
+<div class="row">
+    <div id="cntFloatChequeList" class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Floating Cheque
+                </div>
+            </div>
+            <div id="pnlFloatChequeList" class="panel-body">
+                @{Html.RenderPartial("Accounting/FloatChequeList", Model);}
+            </div>
+        </div>
+    </div>
+</div>

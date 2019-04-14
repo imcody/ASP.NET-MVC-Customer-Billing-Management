@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Billing.Entities.GeneralLedgerHead>
+
+@{
+    ViewBag.Title = "Accounts Ledger Head";
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Accounts Ledger Head</div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive">
+                    <tr>
+                        <th style="text-align: center;">SL.</th>
+                        <th></th>
+                        <th>Type</th>
+                        <th style="text-align: center;">Edit</th>
+                    </tr>
+                    @{ int k = 1;}
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="text-align: center;">@k</td>
+                            <td>@Html.DisplayFor(modelItem => item.GeneralLedgerHeadName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.GeneralLedgerType)</td>
+                            <td style="text-align: center;">
+                                @{
+                                    if (item.Editable)
+                                    {
+                                        <a href="@Html.Raw(@Url.Action("EditHead", "Accounting", new { @id = item.Id }))">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        k++;
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Create Ledger Head
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+            {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Name</label>
+                            <div class="col-md-10">
+                                <input type="text" name="GeneralLedgerHeadName" placeholder="Ledger Head Name" class="form-control" autocomplete="off" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Type</label>
+                            <div class="col-md-10">
+                                <select name="GeneralLedgerType" required class="form-control">
+                                    <option value="">Select Type</option>
+                                    <option value="1">Debit</option>
+                                    <option value="2">Credit</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default btn-sm" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

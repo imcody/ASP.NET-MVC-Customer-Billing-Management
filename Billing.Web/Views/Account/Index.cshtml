@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Billing.Entities.ApplicationUser>
+@using Microsoft.AspNet.Identity;
+@{
+    ViewBag.Title = "User List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    User List
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                    <tr>
+                        <th style="text-align: center; width: 10%;">
+                            SL.
+                        </th>
+                        <th style="width: 25%;">
+                            Name
+                        </th>
+                        <th style="width: 15%;">
+                            Mobile
+                        </th>
+                        <th style="width: 15%;">
+                            Telephone
+                        </th>
+                        <th style="width: 15%;">
+                            Email
+                        </th>
+                        <th style="width: 10%;">
+                            Role
+                        </th>
+                        <th style="text-align: center; width: 10%;">
+                            Edit
+                        </th>
+                    </tr>
+                    @{ int i = 1; }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="text-align: center;">
+                                @i
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PersonName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MobileNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserRoles)
+                            </td>
+                            <td style="text-align: center;">
+                                <a href="@Html.Raw(@Url.Action("Edit", "Account", new { @id = item.Id }))">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </table>
+            </div>
+            <div class="panel-body text-center">
+                @Html.ActionLink("Add New User", "Register", "Account", null, new { @class = "btn btn-primary btn-sm" })
+            </div>
+        </div>
+    </div>
+</div>

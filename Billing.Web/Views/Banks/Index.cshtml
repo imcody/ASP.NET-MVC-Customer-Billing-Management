@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Billing.Entities.BankAccount>
+@{
+    ViewBag.Title = "Bank Accounts";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Bank Accounts
+                </div>
+            </div>
+            <div class="panel-body" id="BankAccountList">
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">SL.</th>
+                            <th>Bank</th>
+                            <th>A/C No</th>
+                            <th>A/C Name</th>
+                            <th style="text-align: right;">Balance</th>
+                            <th style="text-align: center;">Ledger</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1; double Total = 0; }
+                        @foreach (var item in Model)
+                        {
+                        Total = (Total + item.Balance);
+                        <tr>
+                            <td style="text-align: center;">@i</td>
+                            <td>@Billing.DAL.Helpers.BankHelper.getBankName(item.BankNames.ToString())</td>
+                            <td>@Html.DisplayFor(modelItem => item.AccountNo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.AccountNames)</td>
+                            <td style="text-align: right;">@(item.Balance.ToString("f2"))</td>
+                            <td style="text-align: center; cursor: pointer;">
+                                <a href="@Html.Raw(@Url.Action("BankLedger", "Banks", new { @id = item.Id, @BankName = item.BankNames }))">
+                                    <i class="fa fa-book"></i>
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a href="@Html.Raw(@Url.Action("Edit", "Banks", new { @id = item.Id }))">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        i++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th style="text-align: right;" colspan="5">@Total.ToString("f2")</th>
+                            <th colspan="2"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="panel-body text-center">
+                <input type="button" class="btn btn-default btn-sm" value="Print" title="Print this list" />
+            </div>
+        </div>
+    </div>
+</div>

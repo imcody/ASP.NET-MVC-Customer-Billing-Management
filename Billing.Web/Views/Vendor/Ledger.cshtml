@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Billing.ViewModel.VendorLedgerViewModel>
+
+@{
+    ViewBag.Title = ViewBag.VendorName + " - Ledger Book";
+}
+<div class="row">
+    <div id="pnlLedgerFilters" class="col-md-12">
+        @{Html.RenderPartial("Vendor/LedgerListFilter");}
+    </div>
+    <div class="clearfix"></div>
+    <div id="pnlLedgerList" class="col-md-12">
+        <div class="panel panel-default">
+            <div id="pnlHeading" class="panel-heading">
+                <div class="panel-title">
+                    @ViewBag.Title
+                </div>
+            </div>
+            <div id="pnlVendorLedgerTable" class="panel-body">
+                @{Html.RenderPartial("Vendor/VendorLedgerTable");}
+            </div>
+            <div id="pnlActionButtons" class="panel-body text-center">
+                @Html.ActionLink("Back to Vendors", "Index", "Vendor", null, new { @class = "btn btn-default btn-sm" })
+                <input type="hidden" value="@ViewBag.CurrentVendorId" name="CurrentVendorId" id="CurrentVendorId" />
+                <button class="btn btn-primary btn-sm" type="button">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function SearchByDateRange() {
+        debugger;
+        var sDate = $('#VFromDate').val();
+        var eDate = $('#VToDate').val();
+        var VendorId = parseInt($('#CurrentVendorId').val());
+        if (sDate !== "") {
+            $.get('/Vendor/FilterVendorLedgerList', { searchType: 'SearchByDateRange', VendorId: VendorId, InvoiceId: 0, LedgerHead: 0, PaymentMethod: 0, sDate: sDate, eDate: eDate }, function (res) {
+                $('div#pnlVendorLedgerTable').html(res);
+            });
+        }
+        else {
+            alert('Please provide at least starting date');
+            return false;
+        }
+    }
+    function SearchByDateRangeLedgerHead() {
+        debugger;
+        var sDate = $('#VFromDate').val();
+        var eDate = $('#VToDate').val();
+        var VendorId = parseInt($('#CurrentVendorId').val());
+        var lHead = parseInt($('#LedgerHeadFilter').val());
+        if (sDate !== "" && lHead !== null) {
+            $.get('/Vendor/FilterVendorLedgerList', { searchType: 'SearchByDateRangeLedgerHead', VendorId: VendorId, InvoiceId: 0, LedgerHead: lHead, PaymentMethod: 0, sDate: sDate, eDate: eDate }, function (res) {
+                $('div#pnlVendorLedgerTable').html(res);
+            });
+        }
+        else {
+            alert('Please provide at least starting date');
+            return false;
+        }
+    }
+</script>

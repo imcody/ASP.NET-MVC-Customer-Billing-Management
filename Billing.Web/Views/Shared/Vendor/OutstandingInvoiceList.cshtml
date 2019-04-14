@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Billing.ViewModel.InvoiceListViewModel>
+<table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 10%;">Date</th>
+            <th style="text-align: center; width: 10%;">Inv. No</th>
+            <th style="text-align: center; width: 5%;">Airlines</th>
+            <th style="text-align: left; width: 16%;">Agent/Cust.</th>
+            <th style="text-align: right; width: 11%;">Total</th>
+            <th style="text-align: right; width: 11%;">Paid</th>
+            <th style="text-align: right; width: 11%;">Refund</th>
+            <th style="text-align: right; width: 11%;">Due</th>
+            <th style="text-align: center; width: 10%;">User</th>
+            <th style="text-align: center; width: 5%;">View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ if (Model.Count() > 0)
+                {
+                    double Total = 0;
+                    double Paid = 0;
+                    double Due = 0;
+                    double Refund = 0;
+                    foreach (var item in Model)
+                    {
+                        Total = Total + item.Total;
+                        Paid = Paid + item.Paid;
+                        Due = Due + item.Due;
+                        Refund = Refund + item.Refund;
+                    <tr>
+                        <td style="text-align: center;">@item.SysCreateDate.ToString("dd-MM-yyyy")</td>
+                        <td style="text-align: center;">@item.InvoiceId.ToString().PadLeft(6, '0')</td>
+                        <td style="text-align: center;">@Html.DisplayFor(modelItem => item.AirlineCode)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AgentCust)</td>
+                        <td style="text-align: right;">@item.Total.ToString("f2")</td>
+                        <td style="text-align: right;">@item.Paid.ToString("f2")</td>
+                        <td style="text-align: right;">@item.Refund.ToString("f2")</td>
+                        <td style="text-align: right;">@item.Due.ToString("f2")</td>
+                        <td style="text-align: center;">@Html.DisplayFor(modelItem => item.PersonName)</td>
+                        <td style="text-align: center;">
+                            <a href="@Html.Raw(@Url.Action("Details", "Invoice", new { @id = item.InvoiceId}))">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="4" style="text-align: right;">Total</td>
+                    <td style="text-align: right;">@Total.ToString("f2")</td>
+                    <td style="text-align: right;">@Paid.ToString("f2")</td>
+                    <td style="text-align: right;">@Refund.ToString("f2")</td>
+                    <td style="text-align: right;">@Due.ToString("f2")</td>
+                    <td style="text-align: center;" colspan="2"></td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10" style="text-align: center;" class="label-danger">
+                        No results found
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
